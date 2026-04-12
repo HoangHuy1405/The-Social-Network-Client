@@ -1,4 +1,4 @@
-import { User, LogOut, Sun, Moon } from "lucide-react";
+import { Bell, LogOut, MessageCircle, Moon, Sun, User } from "lucide-react";
 import { AppCard } from "@/components/common/AppCard";
 import { AppButton } from "@/components/common/AppButton";
 import { Separator } from "@/components/ui/separator";
@@ -8,6 +8,7 @@ import type { ButtonVariant } from "@/components/common/AppButton";
 import { useAppSelector } from "@/store";
 
 type UserPopupProps = {
+  isMobile?: boolean;
   onViewProfile: () => void;
   onLogout?: () => void;
 };
@@ -23,14 +24,30 @@ type MenuItem =
       className?: string;
     };
 
-function UserPopup({ onViewProfile, onLogout }: UserPopupProps) {
+function UserPopup({ isMobile, onViewProfile, onLogout }: UserPopupProps) {
   const { theme, toggleTheme } = useTheme();
   const { handleLogout } = useLogout();
   const { username } = useAppSelector((state) => state.auth);
 
-  const handleToggleTheme = () => {
-    toggleTheme();
-  };
+  // Mobile-only items injected before the separator
+  const mobileItems: MenuItem[] = isMobile
+    ? [
+        {
+          type: "button",
+          label: "Notifications",
+          icon: <Bell className="size-4 shrink-0" />,
+          onClick: () => {},
+          variant: "ghost",
+        },
+        {
+          type: "button",
+          label: "Messages",
+          icon: <MessageCircle className="size-4 shrink-0" />,
+          onClick: () => {},
+          variant: "ghost",
+        },
+      ]
+    : [];
 
   const MENU_ITEMS: MenuItem[] = [
     {
@@ -40,11 +57,12 @@ function UserPopup({ onViewProfile, onLogout }: UserPopupProps) {
       onClick: onViewProfile,
       variant: "ghost",
     },
+    ...mobileItems,
     {
       type: "button",
       label: "Display Mode",
       icon: theme === "dark" ? <Sun className="size-5 shrink-0" /> : <Moon className="size-5 shrink-0" />,
-      onClick: handleToggleTheme,
+      onClick: toggleTheme,
       variant: "ghost",
     },
     { type: "separator" },

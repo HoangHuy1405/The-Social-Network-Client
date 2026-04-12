@@ -28,6 +28,8 @@ function AppInput({
   fullWidth = false,
   id: externalId,
   className,
+  containerClassName,
+  wrapperClassName,
   disabled,
   validate,
   validateOnTyping = false,
@@ -72,8 +74,9 @@ function AppInput({
       onChange={handleChange}
       onBlur={handleBlur}
       className={cn(
-        /* Strip shadcn's default sizing so our SIZE_CLASSES control it */
-        "h-auto w-full border-none bg-transparent px-0 shadow-none ring-0 focus-visible:border-none focus-visible:ring-0",
+        /* The wrapper div owns the background; inner Input must be fully transparent in all modes.
+           dark:bg-transparent overrides shadcn's dark:bg-input/30 utility. */
+        "h-auto w-full border-none bg-transparent dark:bg-transparent px-0 shadow-none ring-0 focus-visible:border-none focus-visible:ring-0",
         className,
       )}
       style={{ ...props.style, ...autofillStyle }}
@@ -82,7 +85,7 @@ function AppInput({
   );
 
   return (
-    <div className={cn("flex flex-col gap-1", fullWidth ? "w-full" : "w-auto")}>
+    <div className={cn("flex flex-col gap-1", fullWidth ? "w-full" : "w-auto", containerClassName)}>
       {label !== undefined && (
         <label htmlFor={inputId} className="text-sm font-semibold text-foreground">
           {label}
@@ -97,6 +100,7 @@ function AppInput({
             SIZE_CLASSES[size],
             hasError ? "border-destructive ring-3 ring-destructive/20" : VARIANT_WRAPPER_CLASSES[variant],
             disabled && "pointer-events-none opacity-50",
+            wrapperClassName,
           )}
         >
           {prefix !== undefined && <span className="shrink-0 text-muted-foreground">{prefix}</span>}

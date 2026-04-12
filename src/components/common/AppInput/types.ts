@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from "react";
 export type InputSize = "sm" | "default" | "lg";
 export type InputVariant = "default" | "filled" | "ghost";
 
-export type AppInputProps = Omit<ComponentProps<"input">, "size"> & {
+export type AppInputProps = Omit<ComponentProps<"input">, "size" | "prefix" | "suffix"> & {
   /** Visual style variant */
   variant?: InputVariant;
 
@@ -27,6 +27,12 @@ export type AppInputProps = Omit<ComponentProps<"input">, "size"> & {
 
   /** Make input fill full width of its container */
   fullWidth?: boolean;
+
+  /** Extra classes applied to the outermost container div */
+  containerClassName?: string;
+
+  /** Extra classes applied to the prefix/suffix wrapper div */
+  wrapperClassName?: string;
 
   /** Validation function. Returns an error message string if failed, or undefined if valid. */
   validate?: (value: string) => string | undefined;

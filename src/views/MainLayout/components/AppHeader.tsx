@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { Search, Bell, MessageCircle, Mic, Upload } from "lucide-react";
-import { useOnClickOutside, useToggle } from "usehooks-ts";
+import { Search, Bell, MessageCircle, Mic, Upload, Menu } from "lucide-react";
+import { AppInput } from "@/components/common/AppInput";
+import { useOnClickOutside, useToggle, useMediaQuery } from "usehooks-ts";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppButton } from "@/components/common/AppButton";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -8,12 +9,18 @@ import UserPopup from "./UserPopup";
 import { useAppSelector } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { checkIsAuthenticated } from "@/features/auth/utils/auth";
+import { AppLogo } from "@/components/common/AppLogo";
 
-function AppHeader() {
+type AppHeaderProps = {
+  onMobileSidebarToggle: () => void;
+};
+
+function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
   const [popupOpen, togglePopup, setPopupOpen] = useToggle(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const { username, avatarUrl } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 767px)");
 
   const isAuth = checkIsAuthenticated();
   const userInitial = username ? username.charAt(0).toUpperCase() : "?";
@@ -25,34 +32,33 @@ function AppHeader() {
       className="h-14 flex items-center px-3 md:px-4 gap-2 md:gap-3
         bg-card border-b border-border shrink-0"
     >
-      {/* Logo — hidden on mobile to save space */}
-      <div className="hidden md:flex w-[60px] shrink-0 items-center">
-        <span className="text-lg font-bold text-foreground leading-none">
-          Echo<span className="text-primary">Wave</span>
-        </span>
-      </div>
+      {/* Hamburger — mobile only */}
+      {isMobile && (
+        <AppButton variant="ghost" size="icon" className="shrink-0 rounded-full size-9" onClick={onMobileSidebarToggle}>
+          <Menu className="size-5" />
+        </AppButton>
+      )}
 
-      {/* Search bar — centered, responsive width */}
-      <div className="flex-1 max-w-md mx-auto relative">
-        <Search
-          className="absolute left-3 top-1/2 -translate-y-1/2 size-4
-            text-muted-foreground pointer-events-none"
-        />
-        <input
-          type="text"
-          placeholder="Search audio, creator, hashtag..."
-          className="w-full h-9 rounded-full bg-muted pl-9 pr-4 text-sm
-            text-foreground placeholder:text-muted-foreground
-            border border-transparent focus:outline-none
-            focus:border-primary focus:ring-2 focus:ring-primary/20
-            transition-all"
-        />
-      </div>
+      {/* Logo — desktop only */}
+      {!isMobile && (
+        <div className="w-[60px] shrink-0 flex items-center">
+          <AppLogo />
+        </div>
+      )}
+
+      {/* Search bar */}
+      <AppInput
+        variant="filled"
+        placeholder="Search audio, creator, hashtag..."
+        prefix={<Search className="size-4 text-muted-foreground" />}
+        containerClassName="flex-1 max-w-md mx-auto"
+        fullWidth
+      />
 
       {/* Action buttons */}
       <div className="flex items-center gap-1 md:gap-2 shrink-0">
-        {/* Record & Upload — hidden on small screens and for guest users */}
-        {isAuth && (
+        {/* Record & Upload + Notifications — desktop + auth only */}
+        {isAuth && !isMobile && (
           <>
             <AppButton size="sm" leadingIcon={<Mic className="size-4" />}>
               Record
@@ -61,12 +67,7 @@ function AppHeader() {
             <AppButton size="sm" variant="outline" leadingIcon={<Upload className="size-4" />}>
               Upload
             </AppButton>
-          </>
-        )}
 
-        {/* Notifications & Messages — hidden for guest users */}
-        {isAuth && (
-          <>
             <Tooltip>
               <TooltipTrigger asChild>
                 <AppButton variant="ghost" size="icon" className="relative rounded-full size-9">
@@ -95,6 +96,7 @@ function AppHeader() {
         {isAuth ? (
           <div className="relative" ref={popupRef}>
             <button
+              aria-label="Open user menu"
               onClick={togglePopup}
               className="rounded-full focus:outline-none focus:ring-2
                 focus:ring-primary/50 transition-all"
@@ -118,7 +120,7 @@ function AppHeader() {
                 className="absolute right-[-12px] md:right-[-16px] top-[50px] z-50
                   animate-in fade-in-0 zoom-in-95 duration-150"
               >
-                <UserPopup onViewProfile={() => setPopupOpen(false)} onLogout={() => setPopupOpen(false)} />
+                <UserPopup isMobile={isMobile} onViewProfile={() => setPopupOpen(false)} onLogout={() => setPopupOpen(false)} />
               </div>
             )}
           </div>

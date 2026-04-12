@@ -20,12 +20,15 @@ import {
   Podcast,
   StickyNote,
   Settings,
+  X,
 } from "lucide-react";
+import { AppLogo } from "@/components/common/AppLogo";
 
-/** Types */
 type AppSidebarProps = {
   collapsed: boolean;
   onToggle: () => void;
+  mobileOpen: boolean;
+  onMobileClose: () => void;
 };
 type NavItem = {
   label: string;
@@ -37,7 +40,6 @@ type NavSection = {
   items: NavItem[];
 };
 
-/** Constants */
 export const SIDEBAR_EXPANDED_WIDTH = 240;
 export const SIDEBAR_COLLAPSED_WIDTH = 64;
 export const NAV_SECTIONS: NavSection[] = [
@@ -72,31 +74,12 @@ export const NAV_SECTIONS: NavSection[] = [
   },
 ];
 
-function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
+function NavContent({ collapsed, onItemClick }: { collapsed: boolean; onItemClick: (path: string) => void }) {
   const location = useLocation();
-  const navigate = useNavigate();
   const { email } = useAppSelector((state) => state.auth);
 
-  const sidebarWidth = collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH;
-
   return (
-    <aside
-      style={{ width: sidebarWidth }}
-      className="relative h-full bg-sidebar border-r border-sidebar-border
-        hidden md:flex flex-col transition-[width] duration-300
-        ease-in-out shrink-0 z-20"
-    >
-      {/* Reddit-style Toggle Button on the right border */}
-      <button
-        onClick={onToggle}
-        className="absolute -right-3.5 top-[16px] z-30 flex size-7 items-center justify-center
-          rounded-full border border-sidebar-border bg-sidebar/90 shadow-md backdrop-blur-sm
-          text-muted-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-foreground"
-      >
-        <Menu className="size-3.5" />
-      </button>
-
-      {/* Nav sections */}
+    <>
       <nav
         className="flex-1 overflow-y-auto overflow-x-hidden py-3 px-2
           flex flex-col gap-1"
@@ -125,7 +108,7 @@ function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                 <AppButton
                   key={item.path}
                   variant="ghost"
-                  onClick={() => navigate(item.path)}
+                  onClick={() => onItemClick(item.path)}
                   leadingIcon={
                     <Icon className={cn("size-5 shrink-0", isActive ? "text-sidebar-primary" : "text-muted-foreground")} />
                   }
@@ -169,17 +152,82 @@ function AppSidebar({ collapsed, onToggle }: AppSidebarProps) {
                 </div>
               </TooltipTrigger>
               <TooltipContent side="right" className="text-xs">
-                {email || "No email"}
+                {email}
               </TooltipContent>
             </Tooltip>
           ) : (
             <div className="flex justify-center overflow-hidden">
-              <span className="text-sm text-muted-foreground truncate font-semibold">{email || "No email"}</span>
+              <span className="text-sm text-muted-foreground truncate font-semibold">{email}</span>
             </div>
           )}
         </div>
       )}
-    </aside>
+    </>
+  );
+}
+
+function AppSidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: AppSidebarProps) {
+  const navigate = useNavigate();
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+    onMobileClose();
+  };
+
+  const sidebarWidth = collapsed ? SIDEBAR_COLLAPSED_WIDTH : SIDEBAR_EXPANDED_WIDTH;
+
+  return (
+    <>
+      {/* Mobile overlay backdrop */}
+      {mobileOpen && (
+        <button
+          aria-label="Close sidebar"
+          className="fixed inset-0 z-40 w-full bg-black/50 md:hidden"
+          onClick={onMobileClose}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex flex-col bg-sidebar border-r border-sidebar-border",
+          "transition-transform duration-300 ease-in-out md:hidden",
+          mobileOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+        style={{ width: SIDEBAR_EXPANDED_WIDTH }}
+      >
+        <div className="flex items-center justify-between px-4 h-14 shrink-0 border-b border-sidebar-border">
+          <AppLogo />
+          <button
+            onClick={onMobileClose}
+            className="flex size-8 items-center justify-center rounded-full
+              text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-foreground transition-colors"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+        <NavContent collapsed={false} onItemClick={handleNavigate} />
+      </aside>
+
+      {/* Desktop sidebar */}
+      <aside
+        style={{ width: sidebarWidth }}
+        className="relative h-full bg-sidebar border-r border-sidebar-border
+          hidden md:flex flex-col transition-[width] duration-300
+          ease-in-out shrink-0 z-20"
+      >
+        <button
+          onClick={onToggle}
+          className="absolute -right-3.5 top-[16px] z-30 flex size-7 items-center justify-center
+            rounded-full border border-sidebar-border bg-sidebar/90 shadow-md backdrop-blur-sm
+            text-muted-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-foreground"
+        >
+          <Menu className="size-3.5" />
+        </button>
+
+        <NavContent collapsed={collapsed} onItemClick={(path) => navigate(path)} />
+      </aside>
+    </>
   );
 }
 

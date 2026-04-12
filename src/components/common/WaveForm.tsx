@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { AppLogo } from "@/components/common/AppLogo";
 
 export const WaveForm = () => {
   const [waves, setWaves] = useState<{ id: string; height: number }[]>([]);
@@ -22,9 +23,7 @@ export const WaveForm = () => {
         <div className="w-full max-w-2xl">
           {/* CSS fade-in instead of framer-motion */}
           <div className="animate-in fade-in duration-700">
-            <h1 className="mb-6 text-foreground" style={{ fontSize: "3.5rem", fontWeight: 700, lineHeight: 1.1 }}>
-              VoxaVibe
-            </h1>
+            <AppLogo size="xl" className="mb-6" />
             <p className="text-muted-foreground mb-12" style={{ fontSize: "1.125rem", maxWidth: "480px" }}>
               The audio sharing platform where people connect through voice and music.
             </p>
