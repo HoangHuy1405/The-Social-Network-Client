@@ -24,7 +24,7 @@ function AppCard({
   children,
   variant = "default",
   size = "default",
-  radius = "xl",
+  radius = "md",
   header,
   footer,
   action,

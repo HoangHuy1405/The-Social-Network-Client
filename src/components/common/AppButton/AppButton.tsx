@@ -25,7 +25,6 @@ function AppButton({
       disabled={isButtonDisabled}
       className={cn(
         "gap-2 transition-transform duration-200",
-        !isButtonDisabled && "hover:scale-[1.02] active:scale-[0.98]",
         isButtonDisabled && "disabled:pointer-events-auto disabled:cursor-not-allowed",
         className,
       )}

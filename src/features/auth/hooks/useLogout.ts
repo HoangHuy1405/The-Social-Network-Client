@@ -14,13 +14,13 @@ export const useLogout = () => {
     onSuccess: async () => {
       dispatch(logout());
       await persistor.purge();
-      void navigate(ROUTE_PATHS.LOGIN);
+      void navigate(ROUTE_PATHS.HOME);
     },
     // Always clear local state even if API fails (token may already be expired)
     onError: async () => {
       dispatch(logout());
       await persistor.purge();
-      void navigate(ROUTE_PATHS.LOGIN);
+      void navigate(ROUTE_PATHS.HOME);
     },
   });
 

@@ -6,6 +6,8 @@ import { AuthLayout } from "@/features/auth/views/layout";
 import { LoginPage } from "@/features/auth/views/login";
 import { RegisterPage } from "@/features/auth/views/register";
 import ProtectedRoute from "./ProtectedRoute";
+import { FeedPage } from "@/features/feed/views/FeedPage";
+import { MainLayout } from "@/views/MainLayout";
 
 export const router = createBrowserRouter([
   {
@@ -33,6 +35,16 @@ export const router = createBrowserRouter([
           {
             path: "/test",
             element: <NotFoundPage />,
+          },
+        ],
+      },
+      // Public + authenticated routes with MainLayout (header + sidebar)
+      {
+        element: <MainLayout />,
+        children: [
+          {
+            path: ROUTE_PATHS.HOME,
+            element: <FeedPage />,
           },
         ],
       },
