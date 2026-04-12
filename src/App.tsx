@@ -1,16 +1,29 @@
-import { Button } from "@/components/ui/button";
-import "./App.css";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Outlet } from "react-router-dom";
+import { store, persistor } from "@/store";
+import MessageProvider from "@/components/common/MessageProvider";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center gap-4">
-      <Button>Default</Button>
-      <Button variant="outline">Outline</Button>
-      <Button variant="secondary">Secondary</Button>
-      <Button variant="ghost">Ghost</Button>
-      <Button variant="destructive">Destructive</Button>
-      <Button variant="link">Link</Button>
-    </div>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <QueryClientProvider client={queryClient}>
+          <MessageProvider />
+          <Outlet />
+        </QueryClientProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 
