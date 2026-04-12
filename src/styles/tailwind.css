@@ -1,0 +1,8 @@
+@import "tailwindcss" source(none);
+@source '../**/*.{js,ts,jsx,tsx}';
+
+/* Must be in the same file as the Tailwind import for v4 to process it */
+@custom-variant dark (&:is(.dark *));
+
+@import "./theme.css";
+@import "tw-animate-css";

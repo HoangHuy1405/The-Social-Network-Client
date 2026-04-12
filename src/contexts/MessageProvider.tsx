@@ -2,7 +2,7 @@ import { Toaster } from "sonner";
 
 const MessageProvider = () => (
   <Toaster
-    position="top-right"
+    position="top-center"
     visibleToasts={3}
     richColors
     closeButton

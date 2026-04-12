@@ -3,7 +3,9 @@ import { PersistGate } from "redux-persist/integration/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Outlet } from "react-router-dom";
 import { store, persistor } from "@/store";
-import MessageProvider from "@/components/common/MessageProvider";
+import MessageProvider from "@/contexts/MessageProvider";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
+import { LoadingProvider } from "@/components/common/AppLoading";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,14 +18,18 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <QueryClientProvider client={queryClient}>
-          <MessageProvider />
-          <Outlet />
-        </QueryClientProvider>
-      </PersistGate>
-    </Provider>
+    <ThemeProvider defaultTheme="system">
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <QueryClientProvider client={queryClient}>
+            <MessageProvider />
+            <LoadingProvider>
+              <Outlet />
+            </LoadingProvider>
+          </QueryClientProvider>
+        </PersistGate>
+      </Provider>
+    </ThemeProvider>
   );
 }
 

@@ -3,22 +3,59 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { AppInput } from "@/components/common/AppInput";
 import { AppButton } from "@/components/common/AppButton";
-import { useLogin } from "@/features/auth/hooks/useLogin";
+import { useRegister } from "@/features/auth/hooks/useRegister";
 import { ROUTE_PATHS } from "@/constants/routes";
 
-export const LoginPage = () => {
-  const { email, password, isLoading, isFormValid, handleSubmit } = useLogin();
+export const RegisterPage = () => {
+  const { firstName, lastName, username, email, password, isLoading, isFormValid, handleSubmit } = useRegister();
 
   return (
     <div className="w-full max-w-md space-y-8 animate-in fade-in duration-300">
       {/* Heading */}
       <div className="space-y-2">
-        <h2 className="text-foreground">Welcome back</h2>
-        <p className="text-muted-foreground text-sm">Sign in to continue your audio journey</p>
+        <h2 className="text-foreground">Create an account</h2>
+        <p className="text-muted-foreground text-sm">Join us and start your audio journey</p>
       </div>
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="grid grid-cols-2 gap-4">
+          <AppInput
+            label="First Name"
+            placeholder="John"
+            value={firstName.value}
+            onChange={(e) => firstName.setValue(e.target.value)}
+            variant="filled"
+            size="lg"
+            fullWidth
+            validate={firstName.validate}
+            validateOnTyping
+          />
+          <AppInput
+            label="Last Name"
+            placeholder="Doe"
+            value={lastName.value}
+            onChange={(e) => lastName.setValue(e.target.value)}
+            variant="filled"
+            size="lg"
+            fullWidth
+            validate={lastName.validate}
+            validateOnTyping
+          />
+        </div>
+
+        <AppInput
+          label="Username"
+          placeholder="johndoe"
+          value={username.value}
+          onChange={(e) => username.setValue(e.target.value)}
+          variant="filled"
+          size="lg"
+          fullWidth
+          validate={username.validate}
+          validateOnTyping
+        />
+
         <AppInput
           label="Email"
           type="email"
@@ -32,36 +69,29 @@ export const LoginPage = () => {
           validateOnTyping
         />
 
-        <div className="space-y-1">
-          <div className="flex items-center justify-between" tabIndex={-1}>
-            <label className="text-sm font-semibold text-foreground">Password</label>
-            <Link to="#" className="text-sm font-semibold text-primary hover:underline">
-              Forgot password?
-            </Link>
-          </div>
-          <AppInput
-            type="password"
-            placeholder="••••••••"
-            value={password.value}
-            onChange={(e) => password.setValue(e.target.value)}
-            variant="filled"
-            size="lg"
-            fullWidth
-            validate={password.validate}
-            validateOnTyping
-          />
-        </div>
+        <AppInput
+          label="Password"
+          type="password"
+          placeholder="••••••••"
+          value={password.value}
+          onChange={(e) => password.setValue(e.target.value)}
+          variant="filled"
+          size="lg"
+          fullWidth
+          validate={password.validate}
+          validateOnTyping
+        />
 
         <AppButton type="submit" loading={isLoading} disabled={!isFormValid} className="h-11 w-full rounded-lg text-base">
-          Sign in
+          Sign up
         </AppButton>
       </form>
 
-      {/* Register link */}
+      {/* Login link */}
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{" "}
-        <Link to={ROUTE_PATHS.REGISTER} className="font-semibold text-foreground hover:underline">
-          Sign up
+        Already have an account?{" "}
+        <Link to={ROUTE_PATHS.LOGIN} className="font-semibold text-foreground hover:underline">
+          Sign in
         </Link>
       </p>
 

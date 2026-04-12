@@ -2,7 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import { ROUTE_PATHS } from "@/constants/routes";
 import App from "@/App";
 import NotFoundPage from "@/views/NotFoundPage";
+import { AuthLayout } from "@/features/auth/views/layout";
 import { LoginPage } from "@/features/auth/views/login";
+import { RegisterPage } from "@/features/auth/views/register";
 import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
@@ -10,15 +12,29 @@ export const router = createBrowserRouter([
     path: ROUTE_PATHS.HOME,
     element: <App />,
     children: [
-      // Public routes
+      // Public Auth routes
       {
-        path: ROUTE_PATHS.LOGIN,
-        element: <LoginPage />,
+        element: <AuthLayout />,
+        children: [
+          {
+            path: ROUTE_PATHS.LOGIN,
+            element: <LoginPage />,
+          },
+          {
+            path: ROUTE_PATHS.REGISTER,
+            element: <RegisterPage />,
+          },
+        ],
       },
       // Protected routes
       {
         element: <ProtectedRoute />,
-        children: [],
+        children: [
+          {
+            path: "/test",
+            element: <NotFoundPage />,
+          },
+        ],
       },
       // 404
       {

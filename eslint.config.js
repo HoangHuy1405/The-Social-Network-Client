@@ -59,6 +59,8 @@ export default [
       "import/newline-after-import": "error",
       // ==== Code quality ====
       "sonarjs/no-commented-code": "warn",
+      "sonarjs/prefer-read-only-props": "off",
+      "sonarjs/pseudo-random": "off",
       "promise/prefer-await-to-then": "warn",
       "promise/no-promise-in-callback": "off",
       // ==== TypeScript ====
