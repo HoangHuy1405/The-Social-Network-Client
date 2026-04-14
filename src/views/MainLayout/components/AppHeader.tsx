@@ -1,12 +1,12 @@
 import { useRef } from "react";
 import { Search, Bell, MessageCircle, Mic, Upload, Menu } from "lucide-react";
 import { AppInput } from "@/components/common/AppInput";
-import { useOnClickOutside, useToggle, useMediaQuery } from "usehooks-ts";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useOnClickOutside, useToggle } from "usehooks-ts";
+import { useIsMobile } from "@/hooks/useIsMobile";
 import { AppButton } from "@/components/common/AppButton";
+import { AppAvatar } from "@/components/common/AppAvatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import UserPopup from "./UserPopup";
-import { useAppSelector } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { checkIsAuthenticated } from "@/features/auth/utils/auth";
 import { AppLogo } from "@/components/common/AppLogo";
@@ -18,12 +18,10 @@ type AppHeaderProps = {
 function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
   const [popupOpen, togglePopup, setPopupOpen] = useToggle(false);
   const popupRef = useRef<HTMLDivElement>(null);
-  const { username, avatarUrl } = useAppSelector((state) => state.auth);
   const navigate = useNavigate();
-  const isMobile = useMediaQuery("(max-width: 767px)");
+  const isMobile = useIsMobile();
 
   const isAuth = checkIsAuthenticated();
-  const userInitial = username ? username.charAt(0).toUpperCase() : "?";
 
   useOnClickOutside(popupRef as React.RefObject<HTMLElement>, () => setPopupOpen(false));
 
@@ -101,18 +99,10 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
               className="rounded-full focus:outline-none focus:ring-2
                 focus:ring-primary/50 transition-all"
             >
-              <Avatar
-                className="size-9 cursor-pointer ring-2 ring-transparent
+              <AppAvatar
+                className="size-9 cursor-pointer
                   hover:ring-primary/60 transition-all"
-              >
-                <AvatarImage src={avatarUrl || ""} />
-                <AvatarFallback
-                  className="bg-primary text-primary-foreground
-                    text-sm font-bold"
-                >
-                  {userInitial}
-                </AvatarFallback>
-              </Avatar>
+              />
             </button>
 
             {popupOpen && (
