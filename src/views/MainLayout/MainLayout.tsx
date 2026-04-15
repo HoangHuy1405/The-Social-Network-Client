@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { useToggle } from "usehooks-ts";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import AppHeader from "./components/AppHeader";
+import { AppHeader } from "@/components/common/AppHeader";
 import AppSidebar from "./components/AppSidebar";
 
 function MainLayout() {

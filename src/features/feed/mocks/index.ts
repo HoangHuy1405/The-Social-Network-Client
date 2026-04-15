@@ -104,7 +104,7 @@ export const mockCreators: CreatorItem[] = [
     handle: "namphong",
     followers: "12.4K",
     category: "Musician",
-    avatarFallback: "NP",
+    avatarUrl: "https://i.pravatar.cc/256",
   },
   {
     id: "c2",
@@ -112,7 +112,7 @@ export const mockCreators: CreatorItem[] = [
     handle: "khanhly",
     followers: "8.9K",
     category: "Education",
-    avatarFallback: "KL",
+    avatarUrl: "https://i.pravatar.cc/14",
   },
   {
     id: "c3",
@@ -120,7 +120,7 @@ export const mockCreators: CreatorItem[] = [
     handle: "trantalk",
     followers: "34.1K",
     category: "Podcast",
-    avatarFallback: "TT",
+    avatarUrl: "https://i.pravatar.cc/300",
     isFollowing: true,
   },
   {
@@ -129,7 +129,7 @@ export const mockCreators: CreatorItem[] = [
     handle: "ambientsound",
     followers: "6.2K",
     category: "Ambient",
-    avatarFallback: "AT",
+    avatarUrl: "https://i.pravatar.cc/2",
   },
 ];
 

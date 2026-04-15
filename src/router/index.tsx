@@ -8,6 +8,8 @@ import { RegisterPage } from "@/features/auth/views/register";
 import ProtectedRoute from "./ProtectedRoute";
 import { FeedPage } from "@/features/feed/views/FeedPage";
 import { MainLayout } from "@/views/MainLayout";
+import { ProfileLayout } from "@/views/ProfileLayout";
+import { ProfilePage } from "@/features/profile/views/ProfilePage";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +47,16 @@ export const router = createBrowserRouter([
           {
             path: ROUTE_PATHS.HOME,
             element: <FeedPage />,
+          },
+        ],
+      },
+      // Profile page (header only, no sidebar)
+      {
+        element: <ProfileLayout />,
+        children: [
+          {
+            path: ROUTE_PATHS.PROFILE,
+            element: <ProfilePage />,
           },
         ],
       },

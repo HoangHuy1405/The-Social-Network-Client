@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppButton } from "@/components/common/AppButton";
 import FeedSidebarSection from "./FeedSidebarSection";
 import { mockCreators } from "../mocks";
@@ -10,7 +10,8 @@ function FeedCreatorList() {
         {mockCreators.map((creator) => (
           <div key={creator.id} className="flex items-center gap-2.5">
             <Avatar size="default">
-              <AvatarFallback>{creator.avatarFallback}</AvatarFallback>
+              <AvatarImage src={creator.avatarUrl} />
+              <AvatarFallback>{creator.name}</AvatarFallback>
             </Avatar>
 
             <div className="flex-1 min-w-0">

@@ -7,12 +7,12 @@ import { AppButton } from "@/components/common/AppButton";
 import { AppAvatar } from "@/components/common/AppAvatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import UserPopup from "./UserPopup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { checkIsAuthenticated } from "@/utils/auth";
 import { AppLogo } from "@/components/common/AppLogo";
 
 type AppHeaderProps = {
-  onMobileSidebarToggle: () => void;
+  onMobileSidebarToggle?: () => void;
 };
 
 function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
@@ -30,21 +30,18 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
       className="h-14 flex items-center px-3 md:px-4 gap-2 md:gap-3
         bg-card border-b border-border shrink-0"
     >
-      {/* Hamburger — mobile only */}
-      {isMobile && (
+      {isMobile && onMobileSidebarToggle && (
         <AppButton variant="ghost" size="icon" className="shrink-0 rounded-full size-9" onClick={onMobileSidebarToggle}>
           <Menu className="size-5" />
         </AppButton>
       )}
 
-      {/* Logo — desktop only */}
       {!isMobile && (
-        <div className="w-[60px] shrink-0 flex items-center">
+        <Link to="/" className="w-[60px] shrink-0 flex items-center">
           <AppLogo />
-        </div>
+        </Link>
       )}
 
-      {/* Search bar */}
       <AppInput
         variant="filled"
         placeholder="Search audio, creator, hashtag..."
@@ -53,9 +50,7 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
         fullWidth
       />
 
-      {/* Action buttons */}
       <div className="flex items-center gap-1 md:gap-2 shrink-0">
-        {/* Record & Upload + Notifications — desktop + auth only */}
         {isAuth && !isMobile && (
           <>
             <AppButton size="sm" leadingIcon={<Mic className="size-4" />}>
@@ -90,7 +85,6 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
           </>
         )}
 
-        {/* Avatar + popup or Login Button */}
         {isAuth ? (
           <div className="relative" ref={popupRef}>
             <button
@@ -110,7 +104,14 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
                 className="absolute right-[-12px] md:right-[-16px] top-[50px] z-50
                   animate-in fade-in-0 zoom-in-95 duration-150"
               >
-                <UserPopup isMobile={isMobile} onViewProfile={() => setPopupOpen(false)} onLogout={() => setPopupOpen(false)} />
+                <UserPopup
+                  isMobile={isMobile}
+                  onViewProfile={() => {
+                    setPopupOpen(false);
+                    navigate("/users/lanphuong");
+                  }}
+                  onLogout={() => setPopupOpen(false)}
+                />
               </div>
             )}
           </div>

@@ -1,5 +1,4 @@
 import type { ReactNode } from "react";
-import { AppCard } from "@/components/common/AppCard";
 
 type FeedSidebarSectionProps = {
   title: string;
@@ -10,12 +9,10 @@ type FeedSidebarSectionProps = {
 
 function FeedSidebarSection({ title, actionLabel, onAction, children }: FeedSidebarSectionProps) {
   return (
-    <AppCard
-      radius="lg"
-      size="sm"
-      header={<span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{title}</span>}
-      action={
-        actionLabel ? (
+    <div className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{title}</span>
+        {actionLabel && (
           <button
             type="button"
             onClick={onAction}
@@ -24,11 +21,10 @@ function FeedSidebarSection({ title, actionLabel, onAction, children }: FeedSide
           >
             {actionLabel}
           </button>
-        ) : undefined
-      }
-    >
+        )}
+      </div>
       {children}
-    </AppCard>
+    </div>
   );
 }
 

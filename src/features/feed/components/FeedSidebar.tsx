@@ -1,3 +1,4 @@
+import { Separator } from "@/components/ui/separator";
 import FeedCreatorList from "./FeedCreatorList";
 import FeedHashtagList from "./FeedHashtagList";
 import FeedPlaylistList from "./FeedPlaylistList";
@@ -10,7 +11,11 @@ function FeedSidebar() {
         scrollbar-thin scrollbar-thumb-border"
     >
       <FeedCreatorList />
+      <Separator />
+
       <FeedHashtagList />
+      <Separator />
+
       <FeedPlaylistList />
     </div>
   );
