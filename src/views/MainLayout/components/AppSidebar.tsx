@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
-import { AppButton } from "@/components/common/AppButton";
+import { AppButton } from "@/components/core/AppButton";
 import { useAppSelector } from "@/store";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
@@ -22,7 +22,7 @@ import {
   Settings,
   X,
 } from "lucide-react";
-import { AppLogo } from "@/components/common/AppLogo";
+import { AppLogo } from "@/components/core/AppLogo";
 
 type AppSidebarProps = {
   collapsed: boolean;

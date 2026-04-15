@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { AppLogo } from "@/components/common/AppLogo";
+import { AppLogo } from "@/components/core/AppLogo";
 
 export const WaveForm = () => {
   const [waves, setWaves] = useState<{ id: string; height: number }[]>([]);

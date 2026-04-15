@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Mic, Upload, Globe, GraduationCap, Music, Check, ChevronDown } from "lucide-react";
-import { AppDialog } from "@/components/common/AppDialog";
-import { AppAvatar } from "@/components/common/AppAvatar";
-import { AppButton } from "@/components/common/AppButton";
+import { AppDialog } from "@/components/core/AppDialog";
+import { AppAvatar } from "@/components/core/AppAvatar";
+import { AppButton } from "@/components/core/AppButton";
 import { cn } from "@/lib/utils";
 import type { PostType, PostTypeConfig } from "./type";
 

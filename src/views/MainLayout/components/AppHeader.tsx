@@ -1,15 +1,15 @@
 import { useRef } from "react";
 import { Search, Bell, MessageCircle, Mic, Upload, Menu } from "lucide-react";
-import { AppInput } from "@/components/common/AppInput";
+import { AppInput } from "@/components/core/AppInput";
 import { useOnClickOutside, useToggle } from "usehooks-ts";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { AppButton } from "@/components/common/AppButton";
-import { AppAvatar } from "@/components/common/AppAvatar";
+import { AppButton } from "@/components/core/AppButton";
+import { AppAvatar } from "@/components/core/AppAvatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import UserPopup from "./UserPopup";
 import { useNavigate } from "react-router-dom";
 import { checkIsAuthenticated } from "@/utils/auth";
-import { AppLogo } from "@/components/common/AppLogo";
+import { AppLogo } from "@/components/core/AppLogo";
 
 type AppHeaderProps = {
   onMobileSidebarToggle: () => void;

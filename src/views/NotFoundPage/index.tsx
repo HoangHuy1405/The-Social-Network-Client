@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import AppButton from "@/components/common/AppButton/AppButton";
+import AppButton from "@/components/core/AppButton/AppButton";
 import { ROUTE_PATHS } from "@/constants/routes";
 import { Home } from "lucide-react";
 

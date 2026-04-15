@@ -1,4 +1,4 @@
-import { AppAvatar } from "@/components/common/AppAvatar";
+import { AppAvatar } from "@/components/core/AppAvatar";
 import type { ProfileData } from "../types";
 
 type ProfileUserInfoProps = {

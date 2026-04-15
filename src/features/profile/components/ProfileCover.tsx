@@ -1,4 +1,4 @@
-import { AppImage } from "@/components/common/AppImage";
+import { AppImage } from "@/components/core/AppImage";
 
 type ProfileCoverProps = {
   coverUrl: string;

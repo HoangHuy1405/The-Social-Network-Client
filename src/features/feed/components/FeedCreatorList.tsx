@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { AppButton } from "@/components/common/AppButton";
+import { AppButton } from "@/components/core/AppButton";
 import FeedSidebarSection from "./FeedSidebarSection";
 import { mockCreators } from "../mocks";
 

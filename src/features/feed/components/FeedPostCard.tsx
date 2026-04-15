@@ -1,4 +1,4 @@
-import { PostCard } from "@/components/common/PostCard";
+import { PostCard } from "@/components/shared/PostCard";
 import type { PostData } from "@/types/post";
 
 type FeedPostCardProps = {

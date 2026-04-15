@@ -1,5 +1,5 @@
 import { Users, Heart, Headphones, MapPin, CalendarDays, Link as LinkIcon, Music, FileText } from "lucide-react";
-import { AppCard } from "@/components/common/AppCard";
+import { AppCard } from "@/components/core/AppCard";
 import type { ProfileData, ProfileDetailItem } from "../types";
 
 type ProfileDetailsCardProps = {

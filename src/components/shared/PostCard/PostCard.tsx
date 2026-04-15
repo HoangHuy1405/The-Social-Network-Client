@@ -1,8 +1,8 @@
-import { AppCard } from "@/components/common/AppCard";
-import { AppButton } from "@/components/common/AppButton";
-import { AppImage } from "@/components/common/AppImage";
+import { AppCard } from "@/components/core/AppCard";
+import { AppButton } from "@/components/core/AppButton";
+import { AppImage } from "@/components/core/AppImage";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { AudioPlayer } from "@/components/common/AudioPlayer";
+import { AudioPlayer } from "@/components/shared/AudioPlayer";
 import { cn } from "@/lib/utils";
 import { POST_ACTIONS, CATEGORY_STYLES } from "@/constants/post";
 import type { PostData } from "@/types/post";

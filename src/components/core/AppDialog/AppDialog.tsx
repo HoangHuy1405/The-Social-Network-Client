@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
 import { Dialog, DialogTrigger, DialogPortal, DialogOverlay, DialogClose } from "@/components/ui/dialog";
 import { Dialog as DialogPrimitive } from "radix-ui";
-import { AppButton } from "@/components/common/AppButton";
+import { AppButton } from "@/components/core/AppButton";
 import { XIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AppDialogProps } from "./types";

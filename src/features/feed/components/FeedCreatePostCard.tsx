@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Mic, Upload } from "lucide-react";
-import { AppCard } from "@/components/common/AppCard";
-import { AppButton } from "@/components/common/AppButton";
-import { AppAvatar } from "@/components/common/AppAvatar";
-import { AppInput } from "@/components/common/AppInput";
+import { AppCard } from "@/components/core/AppCard";
+import { AppButton } from "@/components/core/AppButton";
+import { AppAvatar } from "@/components/core/AppAvatar";
+import { AppInput } from "@/components/core/AppInput";
 import { Separator } from "@/components/ui/separator";
-import { QuickRecordDialog } from "@/components/common/QuickRecordDialog";
+import { QuickRecordDialog } from "@/components/shared/QuickRecordDialog";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
 function FeedCreatePostCard() {

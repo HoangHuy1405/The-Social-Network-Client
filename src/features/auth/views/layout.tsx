@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
-import { WaveForm } from "@/components/common/WaveForm";
+import { WaveForm } from "@/components/shared/WaveForm/WaveForm";
 import { useTheme } from "@/contexts/ThemeProvider";
 
 export const AuthLayout = () => {

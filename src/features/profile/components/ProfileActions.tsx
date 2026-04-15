@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Pencil, Share2, Mic } from "lucide-react";
-import { AppButton } from "@/components/common/AppButton";
-import { QuickRecordDialog } from "@/components/common/QuickRecordDialog";
+import { AppButton } from "@/components/core/AppButton";
+import { QuickRecordDialog } from "@/components/shared/QuickRecordDialog";
 
 type ProfileActionsProps = {
   isOwner: boolean;

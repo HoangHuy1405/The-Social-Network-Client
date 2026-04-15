@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { AppHeader } from "@/components/common/AppHeader";
+import { AppHeader } from "@/components/core/AppHeader";
 
 function ProfileLayout() {
   return (

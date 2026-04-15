@@ -1,10 +1,10 @@
 import { Bell, LogOut, MessageCircle, Moon, Sun, User } from "lucide-react";
-import { AppCard } from "@/components/common/AppCard";
-import { AppButton } from "@/components/common/AppButton";
+import { AppCard } from "@/components/core/AppCard";
+import { AppButton } from "@/components/core/AppButton";
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/hooks";
 import { useLogout } from "@/features/auth/hooks/useLogout";
-import type { ButtonVariant } from "@/components/common/AppButton";
+import type { ButtonVariant } from "@/components/core/AppButton";
 import { useAppSelector } from "@/store";
 
 type UserPopupProps = {

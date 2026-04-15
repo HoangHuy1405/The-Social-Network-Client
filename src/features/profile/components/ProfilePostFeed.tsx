@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
-import { PostCard } from "@/components/common/PostCard";
-import { AppSelect } from "@/components/common/AppSelect";
+import { PostCard } from "@/components/shared/PostCard";
+import { AppSelect } from "@/components/core/AppSelect";
 import { POST_FILTER_OPTIONS } from "../constants";
 import type { PostFilterOption } from "../types";
 import type { PostData } from "@/types/post";
