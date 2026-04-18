@@ -11,6 +11,8 @@ import { getProfileSections } from "../config/profile.config";
 import type { SettingsGender, SocialLinkEntry } from "../types";
 
 function ProfileTab() {
+  const [firstName, setFirstName] = useState("Lan");
+  const [lastName, setLastName] = useState("Phuong");
   const [displayName, setDisplayName] = useState("Lan Phuong");
   const [username] = useState("lanphuong");
   const [description, setDescription] = useState("Sound designer & voice artist · Love to tell stories through sound");
@@ -34,6 +36,10 @@ function ProfileTab() {
   const profileSections = useMemo(
     () =>
       getProfileSections({
+        firstName,
+        setFirstName,
+        lastName,
+        setLastName,
         displayName,
         setDisplayName,
         username,
@@ -44,7 +50,7 @@ function ProfileTab() {
         genderOptions: GENDER_OPTIONS,
         onRecord: () => {},
       }),
-    [displayName, username, description, gender],
+    [firstName, lastName, displayName, username, description, gender],
   );
 
   return (

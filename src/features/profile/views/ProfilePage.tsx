@@ -1,4 +1,4 @@
-import { useAutoScroll } from "@/composables/common/useAutoScroll";
+import { useAutoScroll } from "@/hooks/useAutoScroll";
 import ProfileCover from "../components/ProfileCover";
 import ProfileUserInfo from "../components/ProfileUserInfo";
 import ProfileActions from "../components/ProfileActions";

@@ -1,11 +1,17 @@
 import { createContext, useCallback, useMemo, type ReactNode } from "react";
 import { useTimeout, useCounter } from "usehooks-ts";
 import AppLoading from "@/components/core/AppLoading/AppLoading";
+import AppTopBarLoading from "@/components/core/AppLoading/AppTopBarLoading";
 
-type LoadingContextValue = {
-  isLoading: boolean;
-  show: () => void;
-  hide: () => void;
+type LoadingSlot = {
+  count: number;
+  inc: () => void;
+  dec: () => void;
+};
+
+export type LoadingContextValue = {
+  overlay: LoadingSlot;
+  bar: LoadingSlot;
 };
 
 export const LoadingContext = createContext<LoadingContextValue | null>(null);
@@ -13,33 +19,28 @@ export const LoadingContext = createContext<LoadingContextValue | null>(null);
 const MAX_LOADING_MS = 30_000;
 
 export const LoadingProvider = ({ children }: { children: ReactNode }) => {
-  const { count: activeCount, setCount, increment } = useCounter(0);
-  const isLoading = activeCount > 0;
+  const { count: overlayCount, setCount: setOverlay, increment: incOverlay } = useCounter(0);
+  const { count: barCount, setCount: setBar, increment: incBar } = useCounter(0);
 
-  // Auto-cancel and clear timeout cleanly using usehooks-ts
-  // The timeout automatically cancels when delay is null (isLoading is false).
-  // This completely eliminates the need for useEffect and useRef.
-  useTimeout(
-    () => {
-      setCount(0);
-    },
-    isLoading ? MAX_LOADING_MS : null,
+  const decOverlay = useCallback(() => setOverlay((prev) => Math.max(0, prev - 1)), [setOverlay]);
+  const decBar = useCallback(() => setBar((prev) => Math.max(0, prev - 1)), [setBar]);
+
+  useTimeout(() => setOverlay(0), overlayCount > 0 ? MAX_LOADING_MS : null);
+  useTimeout(() => setBar(0), barCount > 0 ? MAX_LOADING_MS : null);
+
+  const value = useMemo(
+    () => ({
+      overlay: { count: overlayCount, inc: incOverlay, dec: decOverlay },
+      bar: { count: barCount, inc: incBar, dec: decBar },
+    }),
+    [overlayCount, barCount, incOverlay, decOverlay, incBar, decBar],
   );
-
-  const show = useCallback(() => {
-    increment();
-  }, [increment]);
-
-  const hide = useCallback(() => {
-    setCount((prev) => Math.max(0, prev - 1));
-  }, [setCount]);
-
-  const value = useMemo(() => ({ isLoading, show, hide }), [isLoading, show, hide]);
 
   return (
     <LoadingContext.Provider value={value}>
+      {barCount > 0 && <AppTopBarLoading />}
       {children}
-      {isLoading && <AppLoading />}
+      {overlayCount > 0 && <AppLoading />}
     </LoadingContext.Provider>
   );
 };

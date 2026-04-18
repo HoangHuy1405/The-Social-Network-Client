@@ -3,6 +3,10 @@ import { AppButton } from "@/components/core/AppButton";
 import type { SettingItemConfig, SettingSectionConfig } from "../types";
 
 export function getProfileSections(state: {
+  firstName: string;
+  setFirstName: (v: string) => void;
+  lastName: string;
+  setLastName: (v: string) => void;
   displayName: string;
   setDisplayName: (v: string) => void;
   username: string;
@@ -18,6 +22,22 @@ export function getProfileSections(state: {
       id: "profile-personal",
       title: "Personal Info",
       items: [
+        {
+          id: "first-name",
+          type: "input",
+          label: "First name",
+          value: state.firstName,
+          onChange: state.setFirstName,
+          placeholder: "Your first name",
+        },
+        {
+          id: "last-name",
+          type: "input",
+          label: "Last name",
+          value: state.lastName,
+          onChange: state.setLastName,
+          placeholder: "Your last name",
+        },
         {
           id: "display-name",
           type: "input",
