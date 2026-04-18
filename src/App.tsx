@@ -5,7 +5,8 @@ import { Outlet } from "react-router-dom";
 import { store, persistor } from "@/store";
 import MessageProvider from "@/contexts/MessageProvider";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
-import { LoadingProvider } from "@/components/common/AppLoading";
+import { LoadingProvider } from "@/components/core/AppLoading";
+import { AuthGuard } from "@/router/AuthGuard";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,7 +25,9 @@ function App() {
           <QueryClientProvider client={queryClient}>
             <MessageProvider />
             <LoadingProvider>
-              <Outlet />
+              <AuthGuard>
+                <Outlet />
+              </AuthGuard>
             </LoadingProvider>
           </QueryClientProvider>
         </PersistGate>

@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
-import { AppInput } from "@/components/common/AppInput";
-import { AppButton } from "@/components/common/AppButton";
+import { AppInput } from "@/components/core/AppInput";
+import { AppButton } from "@/components/core/AppButton";
 import { useRegister } from "@/features/auth/hooks/useRegister";
 import { ROUTE_PATHS } from "@/constants/routes";
 

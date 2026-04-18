@@ -1,15 +1,15 @@
 import { createContext, useContext, useEffect, useMemo, type ReactNode } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
-type Theme = "light" | "dark" | "system";
+export type Theme = "light" | "dark" | "system";
 
-type ThemeContextValue = {
+export type ThemeContextValue = {
   theme: Theme;
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
 };
 
-const ThemeContext = createContext<ThemeContextValue | null>(null);
+export const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 function getSystemTheme(): "light" | "dark" {
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
@@ -55,10 +55,4 @@ export function ThemeProvider({ children, defaultTheme = "system" }: ThemeProvid
   const contextValue = useMemo(() => ({ theme, setTheme, toggleTheme }), [theme]);
 
   return <ThemeContext.Provider value={contextValue}>{children}</ThemeContext.Provider>;
-}
-
-export function useTheme(): ThemeContextValue {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useTheme must be used within <ThemeProvider>");
-  return ctx;
 }

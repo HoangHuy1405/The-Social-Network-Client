@@ -1,15 +1,5 @@
-import { Toaster } from "sonner";
+import { AppToaster } from "@/components/core/AppToaster";
 
-const MessageProvider = () => (
-  <Toaster
-    position="top-center"
-    visibleToasts={3}
-    richColors
-    closeButton
-    toastOptions={{
-      duration: 3000,
-    }}
-  />
-);
+const MessageProvider = () => <AppToaster />;
 
 export default MessageProvider;

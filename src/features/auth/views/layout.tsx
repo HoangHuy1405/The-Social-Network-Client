@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { Moon, Sun } from "lucide-react";
-import { WaveForm } from "@/components/common/WaveForm";
-import { useTheme } from "@/contexts/ThemeProvider";
+import { WaveForm } from "@/components/shared/WaveForm/WaveForm";
+import { useTheme } from "@/hooks";
 
 export const AuthLayout = () => {
   const { theme, toggleTheme } = useTheme();
@@ -16,7 +16,7 @@ export const AuthLayout = () => {
         {/* Dark Mode Toggle */}
         <button
           onClick={toggleTheme}
-          className="absolute top-6 right-6 p-2 rounded-full hover:bg-muted transition-colors text-foreground"
+          className="hover:cursor-pointer absolute top-6 right-6 p-2 rounded-full hover:bg-muted transition-colors text-foreground"
           aria-label="Toggle theme"
         >
           {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}

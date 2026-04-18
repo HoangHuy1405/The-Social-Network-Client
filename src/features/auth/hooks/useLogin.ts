@@ -6,8 +6,8 @@ import { useAppDispatch } from "@/store";
 import { setCredentials } from "@/store/authSlice";
 import { useLoading } from "@/hooks/useLoading";
 import { useValidation } from "@/hooks/useValidation";
-import { showSuccessMessage, showErrorMessage } from "@/hooks/useMessage";
-import { ApiError } from "@/api";
+import { showSuccessMessage } from "@/hooks/useMessage";
+import { handleApiError } from "@/utils/api";
 import { ROUTE_PATHS } from "@/constants/routes";
 import type { LoginResponse } from "@/features/auth/types";
 
@@ -43,10 +43,7 @@ export const useLogin = () => {
       showSuccessMessage("Login successful!");
       void navigate(ROUTE_PATHS.HOME);
     },
-    onError: (error) => {
-      const message = error instanceof ApiError ? error.message : "An unexpected error occurred. Please try again.";
-      showErrorMessage(message);
-    },
+    onError: (error) => handleApiError(error),
     onSettled: () => hideLoading(),
   });
 

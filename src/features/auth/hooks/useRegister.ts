@@ -4,8 +4,8 @@ import { useMutation } from "@tanstack/react-query";
 import { registerApi } from "@/features/auth/api";
 import { useLoading } from "@/hooks/useLoading";
 import { useValidation } from "@/hooks/useValidation";
-import { showSuccessMessage, showErrorMessage } from "@/hooks/useMessage";
-import { ApiError } from "@/api";
+import { showSuccessMessage } from "@/hooks/useMessage";
+import { handleApiError } from "@/utils/api";
 import { ROUTE_PATHS } from "@/constants/routes";
 
 export const useRegister = () => {
@@ -27,10 +27,7 @@ export const useRegister = () => {
       showSuccessMessage("Registration successful! Please log in.");
       void navigate(ROUTE_PATHS.LOGIN);
     },
-    onError: (error) => {
-      const message = error instanceof ApiError ? error.message : "An unexpected error occurred. Please try again.";
-      showErrorMessage(message);
-    },
+    onError: (error) => handleApiError(error),
     onSettled: () => hideLoading(),
   });
 

@@ -1,6 +1,6 @@
 import { createContext, useCallback, useMemo, type ReactNode } from "react";
 import { useTimeout, useCounter } from "usehooks-ts";
-import AppLoading from "@/components/common/AppLoading/AppLoading";
+import AppLoading from "@/components/core/AppLoading/AppLoading";
 
 type LoadingContextValue = {
   isLoading: boolean;
