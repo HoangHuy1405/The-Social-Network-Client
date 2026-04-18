@@ -11,7 +11,12 @@ export type AppDialogProps = {
   showCloseButton?: boolean;
   width?: CSSProperties["width"];
   height?: CSSProperties["height"];
+  /** Visually-hidden title for Radix a11y requirement */
+  title?: string;
+  /** Visually-hidden description for Radix a11y requirement */
+  description?: string;
   className?: string;
+
   overlayClassName?: string;
 
   /** Portal container to mount into, defaults to document.body */

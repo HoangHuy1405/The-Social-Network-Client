@@ -3,4 +3,5 @@ export const ROUTE_PATHS = {
   LOGIN: "/login",
   REGISTER: "/register",
   PROFILE: "/users/:username",
+  SETTINGS: "/settings",
 } as const;

@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from "react";
 export type InputSize = "sm" | "default" | "lg";
 export type InputVariant = "default" | "filled" | "ghost";
 
-export type AppInputProps = Omit<ComponentProps<"input">, "size" | "prefix" | "suffix"> & {
+type AppInputBaseProps = {
   /** Visual style variant */
   variant?: InputVariant;
 
@@ -40,3 +40,19 @@ export type AppInputProps = Omit<ComponentProps<"input">, "size" | "prefix" | "s
   /** If true, trigger validation on every keystroke (onChange). */
   validateOnTyping?: boolean;
 };
+
+export type AppInputProps = Omit<ComponentProps<"input">, "size" | "prefix" | "suffix"> &
+  AppInputBaseProps & {
+    /** Render as a single-line input (default) */
+    as?: "input";
+  };
+
+export type AppTextareaProps = Omit<ComponentProps<"textarea">, "size" | "prefix" | "suffix"> &
+  AppInputBaseProps & {
+    /** Render as a multi-line textarea */
+    as: "textarea";
+    rows?: number;
+  };
+
+/** Union type — pass `as="textarea"` to switch to textarea mode */
+export type AnyAppInputProps = AppInputProps | AppTextareaProps;

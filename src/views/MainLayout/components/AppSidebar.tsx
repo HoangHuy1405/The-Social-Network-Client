@@ -220,7 +220,7 @@ function AppSidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: AppSideb
           onClick={onToggle}
           className="absolute -right-3.5 top-[16px] z-30 flex size-7 items-center justify-center
             rounded-full border border-sidebar-border bg-sidebar/90 shadow-md backdrop-blur-sm
-            text-muted-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-foreground"
+            text-muted-foreground transition-all hover:bg-sidebar-accent hover:text-sidebar-foreground hover:cursor-pointer"
         >
           <Menu className="size-3.5" />
         </button>

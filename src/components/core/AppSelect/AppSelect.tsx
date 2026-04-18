@@ -50,21 +50,30 @@ function AppSelect({
       <SelectTrigger
         size={size}
         className={cn(
-          "bg-card border-border text-foreground",
-          "hover:bg-muted transition-colors cursor-pointer",
+          "bg-background border-input shadow-sm text-foreground",
+          "hover:bg-accent hover:text-accent-foreground transition-all duration-200 cursor-pointer",
+          "focus:ring-2 focus:ring-ring/30 focus:border-ring",
           triggerClassName,
         )}
       >
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>
 
-      <SelectContent className={cn("bg-card border-border text-card-foreground", contentClassName)}>
+      <SelectContent
+        position="popper"
+        className={cn(
+          "bg-popover border-border text-popover-foreground shadow-md rounded-md",
+          "w-[unset] min-w-[var(--radix-select-trigger-width)]",
+          "max-h-[300px]",
+          contentClassName,
+        )}
+      >
         {options !== undefined && renderOptions(options)}
 
         {groups !== undefined &&
           groups.map((group, i) => (
             <SelectGroup key={group.label ?? i}>
-              {group.label !== undefined && <SelectLabel>{group.label}</SelectLabel>}
+              {group.label !== undefined && <SelectLabel className="font-semibold">{group.label}</SelectLabel>}
               {renderOptions(group.options)}
             </SelectGroup>
           ))}

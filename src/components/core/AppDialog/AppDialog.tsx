@@ -1,5 +1,13 @@
 import type { CSSProperties } from "react";
-import { Dialog, DialogTrigger, DialogPortal, DialogOverlay, DialogClose } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogPortal,
+  DialogOverlay,
+  DialogClose,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import { Dialog as DialogPrimitive } from "radix-ui";
 import { AppButton } from "@/components/core/AppButton";
 import { XIcon } from "lucide-react";
@@ -18,6 +26,8 @@ function AppDialog({
   showCloseButton = true,
   width = DEFAULT_WIDTH,
   height,
+  title,
+  description,
   className,
   overlayClassName,
   container,
@@ -52,12 +62,17 @@ function AppDialog({
             "flex flex-col gap-4 p-4 text-sm",
             "max-w-[calc(100%-2rem)]",
             "bg-card text-card-foreground rounded-xl ring-1 ring-foreground/10",
-            "duration-100 outline-none",
-            "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95",
-            "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95",
+            "duration-300 ease-out outline-none",
+            "data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-open:slide-in-from-bottom-6",
+            "data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 data-closed:slide-out-to-bottom-6",
             className,
           )}
         >
+          {/* Visually-hidden title/description satisfy Radix a11y requirement */}
+          {title !== undefined && <DialogTitle className="sr-only">{title}</DialogTitle>}
+          {description !== undefined && <DialogDescription className="sr-only">{description}</DialogDescription>}
+          {title === undefined && <DialogTitle className="sr-only">Dialog</DialogTitle>}
+
           {children}
 
           {showCloseButton && (

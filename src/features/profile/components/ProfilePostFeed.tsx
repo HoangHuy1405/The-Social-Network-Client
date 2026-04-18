@@ -17,7 +17,6 @@ function ProfilePostFeed({ posts }: ProfilePostFeedProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h3 className="text-base font-bold text-foreground">Posts</h3>
         <AppSelect
           value={filter}
           onValueChange={(v) => setFilter(v as PostFilterOption)}

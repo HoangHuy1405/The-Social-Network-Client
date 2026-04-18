@@ -86,12 +86,11 @@ axiosInstance.interceptors.response.use(
     if (error.response) {
       const { status, data } = error.response;
 
-      if (status === ResultEnum.OVERDUE) {
+      if (status === ResultEnum.OVERDUE && !isPublicEndpoint(error.config?.url ?? "")) {
         handleAuthExpired();
         return Promise.reject(new ApiError(data?.message ?? "Overdue", data, status));
       }
 
-      showErrorMessage(data?.message ?? `Server error (${status})`);
       return Promise.reject(new ApiError(data?.message ?? "Server error", data, status));
     }
 
