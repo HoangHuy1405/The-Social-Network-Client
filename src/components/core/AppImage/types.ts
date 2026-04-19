@@ -1,10 +1,10 @@
-export type AppImageMode = "auto" | "blur";
+export type AppImageMode = "auto" | "blur" | "cover";
 
 export type AppImageProps = {
   src: string;
   alt: string;
 
-  /** "auto" renders full if resolution fills, "blur" forces blurred bg always */
+  /** "auto" checks ratio, "blur" forces blur bg, "cover" forces object-cover. */
   mode?: AppImageMode;
 
   /** Tailwind blur class suffix, e.g. "xl", "2xl", "3xl" */

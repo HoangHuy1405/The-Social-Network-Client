@@ -42,14 +42,14 @@ export const SOCIAL_PLATFORMS = [
 ];
 
 export const DEFAULT_AVATARS = [
-  "https://api.dicebear.com/9.x/glass/svg?seed=Felix",
-  "https://api.dicebear.com/9.x/glass/svg?seed=Luna",
-  "https://api.dicebear.com/9.x/glass/svg?seed=Zoe",
-  "https://api.dicebear.com/9.x/glass/svg?seed=Leo",
-  "https://api.dicebear.com/9.x/glass/svg?seed=Mia",
-  "https://api.dicebear.com/9.x/glass/svg?seed=Max",
-  "https://api.dicebear.com/9.x/glass/svg?seed=Nora",
-  "https://api.dicebear.com/9.x/glass/svg?seed=Eli",
+  "https://api.dicebear.com/9.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&seed=Chase",
+  "https://api.dicebear.com/9.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&seed=Sophia",
+  "https://api.dicebear.com/9.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&seed=Aidan",
+  "https://api.dicebear.com/9.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&seed=Alexander",
+  "https://api.dicebear.com/9.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&seed=Jameson",
+  "https://api.dicebear.com/9.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&seed=Jack",
+  "https://api.dicebear.com/9.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&seed=Sadie",
+  "https://api.dicebear.com/9.x/notionists/svg?backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf&seed=Amaya",
 ];
 
 export const DEFAULT_BANNERS = [

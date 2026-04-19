@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { Navigate, useLocation, useMatches } from "react-router-dom";
 import { useAppSelector } from "@/store";
 import { ROUTE_PATHS } from "@/constants/routes";
+import { showErrorMessage } from "@/hooks/useMessage";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -18,7 +19,25 @@ export function AuthGuard({ children }: AuthGuardProps) {
     return handle?.requiresAuth;
   });
 
-  if (requiresAuth && !accessToken) {
+  const isUnauthorized = requiresAuth && !accessToken;
+
+  useEffect(() => {
+    let ignore = false;
+
+    if (isUnauthorized) {
+      setTimeout(() => {
+        if (!ignore) {
+          showErrorMessage("403 Forbidden. Please login to access this page.");
+        }
+      }, 0);
+    }
+
+    return () => {
+      ignore = true;
+    };
+  }, [isUnauthorized]);
+
+  if (isUnauthorized) {
     return <Navigate to={ROUTE_PATHS.LOGIN} state={{ from: location }} replace />;
   }
 

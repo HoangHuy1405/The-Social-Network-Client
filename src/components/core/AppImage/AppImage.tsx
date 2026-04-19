@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import type { AppImageProps } from "./types";
 
@@ -25,6 +25,14 @@ function AppImage({
   const [imgSrc, setImgSrc] = useState(src);
   const [needsBlur, setNeedsBlur] = useState(mode === "blur");
 
+  useEffect(() => {
+    setImgSrc(src);
+    if (mode === "cover") setNeedsBlur(false);
+    else if (mode === "blur") setNeedsBlur(true);
+    // if "auto", we let the onLoad event decide,
+    // but initially assume no blur until loaded
+  }, [src, mode]);
+
   const handleError = useCallback(() => {
     if (fallbackUrl && imgSrc !== fallbackUrl) {
       setImgSrc(fallbackUrl);
@@ -34,6 +42,10 @@ function AppImage({
   const handleLoad = useCallback(
     (e: React.SyntheticEvent<HTMLImageElement>) => {
       if (mode === "blur") return;
+      if (mode === "cover") {
+        setNeedsBlur(false);
+        return;
+      }
 
       const img = e.currentTarget;
       const container = img.parentElement;

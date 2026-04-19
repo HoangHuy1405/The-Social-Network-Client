@@ -28,6 +28,7 @@ export const useLogin = () => {
           accessToken: response.accessToken,
           email: response.email,
           username: response.username,
+          displayName: response.displayName ?? null,
           avatarUrl: response.avatarUrl ?? null,
         }),
       );

@@ -11,11 +11,14 @@ import { cn } from "@/lib/utils";
 import { GENDER_OPTIONS, SOCIAL_PLATFORMS, DEFAULT_AVATARS, DEFAULT_BANNERS } from "../constants";
 import { getProfileSections } from "../config/profile.config";
 import { useSettingsForm } from "../contexts/SettingsFormContext";
+import { useAppDispatch } from "@/store";
+import { setAvatarUrl } from "@/store/authSlice";
 import type { SettingsGender, SocialLinkEntry } from "../types";
 
 function ProfileTab() {
   const { profileForm } = useSettingsForm();
   const { watch, setValue } = profileForm;
+  const dispatch = useAppDispatch();
 
   const avatarUrl = watch("avatarUrl");
   const bannerUrl = watch("bannerUrl");
@@ -74,7 +77,7 @@ function ProfileTab() {
           <div className="relative group">
             <div className="w-full aspect-[3/1] rounded-xl overflow-hidden bg-muted">
               {bannerUrl ? (
-                <AppImage src={bannerUrl} alt="Banner" mode="auto" aspectRatio="aspect-[3/1]" className="size-full" />
+                <AppImage src={bannerUrl} alt="Banner" mode="cover" aspectRatio="aspect-[3/1]" className="size-full" />
               ) : (
                 <div className="size-full bg-gradient-to-r from-primary/20 to-primary/5" />
               )}
@@ -176,7 +179,10 @@ function ProfileTab() {
         currentUrl={avatarUrl}
         defaultImages={DEFAULT_AVATARS}
         onSelect={(url) => setValue("avatarUrl", url)}
+        onSuccess={(url) => dispatch(setAvatarUrl(url))}
         aspectRatio="aspect-square"
+        mediaType="AVATAR"
+        context="PROFILE"
       />
       <MediaUploadDialog
         open={bannerDialogOpen}
@@ -185,6 +191,9 @@ function ProfileTab() {
         currentUrl={bannerUrl}
         defaultImages={DEFAULT_BANNERS}
         onSelect={(url) => setValue("bannerUrl", url)}
+        onSuccess={(url) => setValue("bannerUrl", url)}
+        mediaType="BANNER"
+        context="PROFILE"
       />
     </>
   );
