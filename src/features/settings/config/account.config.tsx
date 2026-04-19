@@ -6,6 +6,8 @@ import type { SettingItemConfig, SettingSectionConfig } from "../types";
 // Account tab config is a function so action ReactNodes can be created fresh per render.
 // Each item is typed as SettingItemConfig for type-safety.
 export function getAccountSections(handlers: {
+  email: string;
+  phoneNumber: string;
   onEmail: () => void;
   onPhone: () => void;
   onPassword: () => void;
@@ -21,7 +23,7 @@ export function getAccountSections(handlers: {
           type: "row",
           icon: Mail,
           label: "Email address",
-          description: "lanphuong@email.com",
+          description: handlers.email || "Not set",
           onClick: handlers.onEmail,
         },
         {
@@ -29,7 +31,7 @@ export function getAccountSections(handlers: {
           type: "row",
           icon: Phone,
           label: "Phone number",
-          description: "+84 912 345 678",
+          description: handlers.phoneNumber || "Not set",
           onClick: handlers.onPhone,
         },
         {

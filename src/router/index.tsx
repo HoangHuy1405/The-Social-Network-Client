@@ -9,7 +9,7 @@ import { FeedPage } from "@/features/feed/views/FeedPage";
 import { MainLayout } from "@/views/MainLayout";
 import { ProfileLayout } from "@/views/ProfileLayout";
 import { ProfilePage } from "@/features/profile/views/ProfilePage";
-import { SettingsLayout } from "@/features/settings/views/SettingsLayout";
+import { SettingsLayout } from "@/features/settings/views";
 import { AccountTab } from "@/features/settings/views/AccountTab";
 import { ProfileTab } from "@/features/settings/views/ProfileTab";
 import { PrivacyTab } from "@/features/settings/views/PrivacyTab";
@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
             element: <FeedPage />,
           },
           {
-            path: ROUTE_PATHS.SETTINGS,
+            path: "/settings",
             element: <SettingsLayout />,
             handle: { requiresAuth: true },
             children: [

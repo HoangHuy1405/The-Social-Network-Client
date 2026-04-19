@@ -1,21 +1,14 @@
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/react-query";
 import { Outlet } from "react-router-dom";
 import { store, persistor } from "@/store";
 import MessageProvider from "@/contexts/MessageProvider";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { LoadingProvider } from "@/components/core/AppLoading";
 import { AuthGuard } from "@/router/AuthGuard";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+import { GlobalLoadingBridge } from "@/contexts/GlobalLoadingBridge";
 
 function App() {
   return (
@@ -25,6 +18,7 @@ function App() {
           <QueryClientProvider client={queryClient}>
             <MessageProvider />
             <LoadingProvider>
+              <GlobalLoadingBridge />
               <AuthGuard>
                 <Outlet />
               </AuthGuard>

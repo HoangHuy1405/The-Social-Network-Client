@@ -1,28 +1,27 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import SettingsSection from "../components/SettingsSection";
 import { getPrivacySections } from "../config/privacy.config";
 import { VISIBILITY_OPTIONS } from "../constants";
+import { useSettingsForm } from "../contexts/SettingsFormContext";
 
 function PrivacyTab() {
-  const [isPrivate, setIsPrivate] = useState(false);
-  const [showActivity, setShowActivity] = useState(true);
-  const [followersVisibility, setFollowersVisibility] = useState("everyone");
-  const [followingVisibility, setFollowingVisibility] = useState("everyone");
+  const { privacyForm } = useSettingsForm();
+  const { watch, setValue } = privacyForm;
 
   const sections = useMemo(
     () =>
       getPrivacySections({
-        isPrivate,
-        setIsPrivate,
-        followersVisibility,
-        setFollowersVisibility,
-        followingVisibility,
-        setFollowingVisibility,
-        showActivity,
-        setShowActivity,
+        isPrivate: watch("isPrivate"),
+        setIsPrivate: (v) => setValue("isPrivate", v),
+        followersVisibility: watch("followersVisibility"),
+        setFollowersVisibility: (v) => setValue("followersVisibility", v),
+        followingVisibility: watch("followingVisibility"),
+        setFollowingVisibility: (v) => setValue("followingVisibility", v),
+        showActivity: watch("showActivity"),
+        setShowActivity: (v) => setValue("showActivity", v),
         visibilityOptions: VISIBILITY_OPTIONS,
       }),
-    [isPrivate, followersVisibility, followingVisibility, showActivity],
+    [watch("isPrivate"), watch("followersVisibility"), watch("followingVisibility"), watch("showActivity"), setValue],
   );
 
   return (

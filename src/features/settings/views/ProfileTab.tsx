@@ -1,5 +1,7 @@
 import { useState, useMemo } from "react";
 import { Camera, ImageIcon, Plus, Trash2, Link as LinkIcon } from "lucide-react";
+import { AppImage } from "@/components/core/AppImage";
+import { AppAvatar } from "@/components/core/AppAvatar";
 import SettingsSection from "../components/SettingsSection";
 import MediaUploadDialog from "../components/MediaUploadDialog";
 import AppInput from "@/components/core/AppInput/AppInput";
@@ -8,59 +10,74 @@ import AppSelect from "@/components/core/AppSelect/AppSelect";
 import { cn } from "@/lib/utils";
 import { GENDER_OPTIONS, SOCIAL_PLATFORMS, DEFAULT_AVATARS, DEFAULT_BANNERS } from "../constants";
 import { getProfileSections } from "../config/profile.config";
+import { useSettingsForm } from "../contexts/SettingsFormContext";
 import type { SettingsGender, SocialLinkEntry } from "../types";
 
 function ProfileTab() {
-  const [firstName, setFirstName] = useState("Lan");
-  const [lastName, setLastName] = useState("Phuong");
-  const [displayName, setDisplayName] = useState("Lan Phuong");
-  const [username] = useState("lanphuong");
-  const [description, setDescription] = useState("Sound designer & voice artist · Love to tell stories through sound");
-  const [gender, setGender] = useState<SettingsGender>("female");
+  const { profileForm } = useSettingsForm();
+  const { watch, setValue } = profileForm;
 
-  const [avatarUrl, setAvatarUrl] = useState("https://i.pravatar.cc/300?u=lanphuong");
-  const [bannerUrl, setBannerUrl] = useState("https://loremflickr.com/1280/720/music?lock=2");
-
-  const [socialLinks, setSocialLinks] = useState<SocialLinkEntry[]>([{ platform: "twitter", url: "" }]);
+  const avatarUrl = watch("avatarUrl");
+  const bannerUrl = watch("bannerUrl");
+  const firstName = watch("firstName");
+  const socialLinks = watch("socialLinks");
 
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const [bannerDialogOpen, setBannerDialogOpen] = useState(false);
 
-  const addSocialLink = () => setSocialLinks((prev) => [...prev, { platform: "website", url: "" }]);
+  const addSocialLink = () => setValue("socialLinks", [...socialLinks, { platform: "website", url: "" }]);
 
-  const removeSocialLink = (index: number) => setSocialLinks((prev) => prev.filter((_, i) => i !== index));
+  const removeSocialLink = (index: number) =>
+    setValue(
+      "socialLinks",
+      socialLinks.filter((_, i) => i !== index),
+    );
 
   const updateSocialLink = (index: number, field: keyof SocialLinkEntry, value: string) =>
-    setSocialLinks((prev) => prev.map((link, i) => (i === index ? { ...link, [field]: value } : link)));
+    setValue(
+      "socialLinks",
+      socialLinks.map((link, i) => (i === index ? { ...link, [field]: value } : link)),
+    );
 
   const profileSections = useMemo(
     () =>
       getProfileSections({
-        firstName,
-        setFirstName,
-        lastName,
-        setLastName,
-        displayName,
-        setDisplayName,
-        username,
-        description,
-        setDescription,
-        gender,
-        setGender: (v) => setGender(v as SettingsGender),
+        firstName: watch("firstName"),
+        setFirstName: (v) => setValue("firstName", v),
+        lastName: watch("lastName"),
+        setLastName: (v) => setValue("lastName", v),
+        displayName: watch("displayName"),
+        setDisplayName: (v) => setValue("displayName", v),
+        username: watch("username"),
+        description: watch("bioDescription"),
+        setDescription: (v) => setValue("bioDescription", v),
+        gender: watch("gender"),
+        setGender: (v) => setValue("gender", v as SettingsGender),
         genderOptions: GENDER_OPTIONS,
         onRecord: () => {},
       }),
-    [firstName, lastName, displayName, username, description, gender],
+    [
+      watch("firstName"),
+      watch("lastName"),
+      watch("displayName"),
+      watch("username"),
+      watch("bioDescription"),
+      watch("gender"),
+      setValue,
+    ],
   );
 
   return (
     <>
-      {/* Avatar & Banner — custom layout, not config-driven */}
       <SettingsSection title="Avatar & Banner">
         <div className="p-4 flex flex-col gap-4">
           <div className="relative group">
             <div className="w-full aspect-[3/1] rounded-xl overflow-hidden bg-muted">
-              <img src={bannerUrl} alt="Banner" className="size-full object-cover" />
+              {bannerUrl ? (
+                <AppImage src={bannerUrl} alt="Banner" mode="auto" aspectRatio="aspect-[3/1]" className="size-full" />
+              ) : (
+                <div className="size-full bg-gradient-to-r from-primary/20 to-primary/5" />
+              )}
             </div>
             <button
               type="button"
@@ -86,8 +103,13 @@ function ProfileTab() {
 
           <div className="flex items-center gap-4">
             <div className="relative group">
-              <div className={cn("size-20 rounded-full overflow-hidden", "ring-4 ring-background bg-muted")}>
-                <img src={avatarUrl} alt="Avatar" className="size-full object-cover" />
+              <div className={cn("size-20 rounded-full", "ring-4 ring-background bg-muted")}>
+                <AppAvatar
+                  src={avatarUrl || undefined}
+                  fallback={firstName.charAt(0) || "?"}
+                  useAuthAvatar={false}
+                  className="size-full"
+                />
               </div>
               <button
                 type="button"
@@ -109,7 +131,6 @@ function ProfileTab() {
         </div>
       </SettingsSection>
 
-      {/* Personal Info + Audio Features — config-driven via profile.config.tsx */}
       {profileSections.map((section) => (
         <SettingsSection key={section.id} title={section.title} variant={section.variant} items={section.items} />
       ))}
@@ -154,7 +175,7 @@ function ProfileTab() {
         title="Change profile photo"
         currentUrl={avatarUrl}
         defaultImages={DEFAULT_AVATARS}
-        onSelect={setAvatarUrl}
+        onSelect={(url) => setValue("avatarUrl", url)}
         aspectRatio="aspect-square"
       />
       <MediaUploadDialog
@@ -163,7 +184,7 @@ function ProfileTab() {
         title="Change banner image"
         currentUrl={bannerUrl}
         defaultImages={DEFAULT_BANNERS}
-        onSelect={setBannerUrl}
+        onSelect={(url) => setValue("bannerUrl", url)}
       />
     </>
   );

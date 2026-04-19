@@ -76,3 +76,29 @@ export type SocialLinkEntry = {
   platform: string;
   url: string;
 };
+
+// ─── Per-tab form data types ──────────────────────────────────────────────────
+
+export type ProfileFormData = {
+  firstName: string;
+  lastName: string;
+  displayName: string;
+  username: string;
+  bioDescription: string;
+  gender: string;
+  avatarUrl: string;
+  bannerUrl: string;
+  socialLinks: SocialLinkEntry[];
+};
+
+export type AccountFormData = {
+  email: string;
+  phoneNumber: string;
+};
+
+export type PrivacyFormData = {
+  isPrivate: boolean;
+  followersVisibility: string;
+  followingVisibility: string;
+  showActivity: boolean;
+};
