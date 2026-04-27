@@ -38,7 +38,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
   }, [isUnauthorized]);
 
   if (isUnauthorized) {
-    return <Navigate to={ROUTE_PATHS.LOGIN} state={{ from: location }} replace />;
+    return <Navigate to={ROUTE_PATHS.UNAUTHORIZED} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

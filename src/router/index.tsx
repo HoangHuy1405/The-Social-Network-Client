@@ -15,6 +15,8 @@ import { ProfileTab } from "@/features/settings/views/ProfileTab";
 import { PrivacyTab } from "@/features/settings/views/PrivacyTab";
 import { PreferencesTab } from "@/features/settings/views/PreferencesTab";
 import { NotificationsTab } from "@/features/settings/views/NotificationsTab";
+import UnauthorizedPage from "@/views/UnauthorizedPage";
+import CreatePostPage from "@/features/post/views/CreatePostPage";
 
 export const router = createBrowserRouter([
   {
@@ -44,6 +46,11 @@ export const router = createBrowserRouter([
             element: <FeedPage />,
           },
           {
+            path: ROUTE_PATHS.CREATE_POST,
+            element: <CreatePostPage />,
+            handle: { requiresAuth: true },
+          },
+          {
             path: "/settings",
             element: <SettingsLayout />,
             handle: { requiresAuth: true },
@@ -67,6 +74,11 @@ export const router = createBrowserRouter([
             element: <ProfilePage />,
           },
         ],
+      },
+      // 401 Unauthorized
+      {
+        path: ROUTE_PATHS.UNAUTHORIZED,
+        element: <UnauthorizedPage />,
       },
       // 404
       {

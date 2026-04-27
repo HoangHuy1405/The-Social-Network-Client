@@ -14,6 +14,8 @@ export function getProfileSections(state: {
   setDescription: (v: string) => void;
   gender: string;
   setGender: (v: string) => void;
+  location: string;
+  setLocation: (v: string) => void;
   genderOptions: { value: string; label: string }[];
   onRecord: () => void;
 }): SettingSectionConfig[] {
@@ -54,6 +56,14 @@ export function getProfileSections(state: {
           onChange: () => {},
           disabled: true,
           prefix: <span className="text-muted-foreground text-sm">@</span>,
+        },
+        {
+          id: "location",
+          type: "input",
+          label: "Location",
+          value: state.location,
+          onChange: state.setLocation,
+          placeholder: "Where are you from?",
         },
         {
           id: "description",

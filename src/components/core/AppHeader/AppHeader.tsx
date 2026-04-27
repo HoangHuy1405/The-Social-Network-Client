@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { Search, Bell, MessageCircle, Mic, Upload, Menu } from "lucide-react";
 import { AppInput } from "@/components/core/AppInput";
 import { useOnClickOutside, useToggle } from "usehooks-ts";
@@ -10,6 +10,8 @@ import UserPopup from "./UserPopup";
 import { useNavigate, Link } from "react-router-dom";
 import { checkIsAuthenticated } from "@/utils/auth";
 import { AppLogo } from "@/components/core/AppLogo";
+import { QuickRecordDialog } from "@/components/shared/QuickRecordDialog";
+import { showInfoMessage } from "@/hooks/useMessage";
 
 type AppHeaderProps = {
   onMobileSidebarToggle?: () => void;
@@ -17,6 +19,7 @@ type AppHeaderProps = {
 
 function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
   const [popupOpen, togglePopup, setPopupOpen] = useToggle(false);
+  const [quickRecordOpen, setQuickRecordOpen] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
@@ -51,16 +54,31 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
       />
 
       <div className="flex items-center gap-1 md:gap-2 shrink-0">
-        {isAuth && !isMobile && (
+        {!isMobile && (
           <>
-            <AppButton size="sm" leadingIcon={<Mic className="size-4" />}>
+            <QuickRecordDialog open={quickRecordOpen} onOpenChange={setQuickRecordOpen} />
+            <AppButton
+              size="sm"
+              leadingIcon={<Mic className="size-4" />}
+              onClick={() => {
+                if (isAuth) {
+                  setQuickRecordOpen(true);
+                } else {
+                  showInfoMessage("Please log in to record a post.");
+                }
+              }}
+            >
               Record
             </AppButton>
 
             <AppButton size="sm" variant="outline" leadingIcon={<Upload className="size-4" />}>
               Upload
             </AppButton>
+          </>
+        )}
 
+        {isAuth && !isMobile && (
+          <>
             <Tooltip>
               <TooltipTrigger asChild>
                 <AppButton variant="ghost" size="icon" className="relative rounded-full size-9">
@@ -104,14 +122,7 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
                 className="absolute right-[-12px] md:right-[-16px] top-[50px] z-50
                   animate-in fade-in-0 zoom-in-95 duration-150"
               >
-                <UserPopup
-                  isMobile={isMobile}
-                  onViewProfile={() => {
-                    setPopupOpen(false);
-                    navigate("/users/lanphuong");
-                  }}
-                  onLogout={() => setPopupOpen(false)}
-                />
+                <UserPopup isMobile={isMobile} onViewProfile={() => setPopupOpen(false)} onLogout={() => setPopupOpen(false)} />
               </div>
             )}
           </div>

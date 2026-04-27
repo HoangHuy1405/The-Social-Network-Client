@@ -114,6 +114,9 @@ const http = {
   put: <T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
     axiosInstance.put<T>(url, data, config).then((res) => res.data),
 
+  patch: <T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
+    axiosInstance.patch<T>(url, data, config).then((res) => res.data),
+
   delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> =>
     axiosInstance.delete<T>(url, config).then((res) => res.data),
 

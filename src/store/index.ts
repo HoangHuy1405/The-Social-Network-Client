@@ -2,6 +2,7 @@ import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
 import { useDispatch, useSelector } from "react-redux";
 import authReducer from "./authSlice";
+import postDraftReducer from "./postDraftSlice";
 
 /**
  * Explicit localStorage wrapper — avoids the broken ESM resolution of
@@ -22,6 +23,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   auth: authReducer,
+  postDraft: postDraftReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

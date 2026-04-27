@@ -1,31 +1,15 @@
 import { useState } from "react";
-import { Mic, Upload, Globe, GraduationCap, Music, Check, ChevronDown } from "lucide-react";
+import { Mic, Upload, ExternalLink, Check, Music, Podcast } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { AppDialog } from "@/components/core/AppDialog";
 import { AppAvatar } from "@/components/core/AppAvatar";
 import { AppButton } from "@/components/core/AppButton";
 import { cn } from "@/lib/utils";
-import type { PostType, PostTypeConfig } from "./type";
-
-const POST_TYPE_OPTIONS: PostTypeConfig[] = [
-  {
-    key: "quick-record",
-    label: "Quick Record",
-    icon: Mic,
-    activeClassName: "bg-primary text-primary-foreground",
-  },
-  {
-    key: "podcast",
-    label: "Podcast",
-    icon: Music,
-    activeClassName: "bg-purple-500/20 text-purple-400",
-  },
-  {
-    key: "lecture",
-    label: "Lecture",
-    icon: GraduationCap,
-    activeClassName: "bg-amber-500/20 text-amber-400",
-  },
-];
+import { useDispatch } from "react-redux";
+import { setDraft } from "@/store/postDraftSlice";
+import { ROUTE_PATHS } from "@/constants/routes";
+import { QUICK_POST_CATEGORIES, POST_CATEGORIES } from "@/constants/post";
+import type { PostCategory } from "@/types/post";
 
 type QuickRecordDialogProps = {
   open: boolean;
@@ -33,7 +17,22 @@ type QuickRecordDialogProps = {
 };
 
 function QuickRecordDialog({ open, onOpenChange }: QuickRecordDialogProps) {
-  const [postType, setPostType] = useState<PostType>("quick-record");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [postCategory, setPostCategory] = useState<PostCategory>("voicenote");
+  const [title, setTitle] = useState("");
+
+  const handleSwitchToEditor = () => {
+    dispatch(
+      setDraft({
+        title,
+        category: postCategory,
+        // audioBlobUrl would be set here if we had an actual recording blob implemented
+      }),
+    );
+    onOpenChange(false);
+    navigate(ROUTE_PATHS.CREATE_POST);
+  };
 
   return (
     <AppDialog open={open} onOpenChange={onOpenChange} width={520}>
@@ -55,6 +54,8 @@ function QuickRecordDialog({ open, onOpenChange }: QuickRecordDialogProps) {
         )}
       >
         <textarea
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
           placeholder="What's on your mind? (Title/Description)"
           className={cn(
             "w-full resize-none bg-transparent outline-none",
@@ -92,29 +93,38 @@ function QuickRecordDialog({ open, onOpenChange }: QuickRecordDialogProps) {
       </div>
 
       <div className="flex items-center gap-2">
-        {POST_TYPE_OPTIONS.map(({ key, label, icon: Icon, activeClassName }) => (
-          <button
-            key={key}
-            type="button"
-            onClick={() => setPostType(key)}
-            className={cn(
-              "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5",
-              "text-xs font-medium transition-colors duration-200",
-              "cursor-pointer",
-              postType === key ? activeClassName : "bg-muted text-muted-foreground hover:bg-muted/80",
-            )}
-          >
-            <Icon className="size-3.5" />
-            {label}
-            {postType === key && <Check className="size-3" />}
-          </button>
-        ))}
+        {QUICK_POST_CATEGORIES.map((category) => {
+          const config = POST_CATEGORIES[category];
+          const typeIcons = {
+            mic: Mic,
+            music: Music,
+            podcast: Podcast,
+          };
+          const Icon = typeIcons[config.iconKey] || Mic;
+
+          return (
+            <button
+              key={category}
+              type="button"
+              onClick={() => setPostCategory(category)}
+              className={cn(
+                "inline-flex items-center gap-1.5 rounded-full px-3 py-1.5",
+                "text-xs font-medium transition-colors duration-200",
+                "cursor-pointer",
+                postCategory === category ? config.className : "bg-muted text-muted-foreground hover:bg-muted/80",
+              )}
+            >
+              <Icon className="size-3.5" />
+              {config.label}
+              {postCategory === category && <Check className="size-3" />}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex items-center justify-between border-t border-border pt-3">
-        <AppButton variant="ghost" size="sm" leadingIcon={<Globe className="size-4" />}>
-          Everyone
-          <ChevronDown className="size-3.5" />
+        <AppButton variant="ghost" size="sm" onClick={handleSwitchToEditor} trailingIcon={<ExternalLink className="size-4" />}>
+          Switch To Editor
         </AppButton>
         <AppButton variant="default" size="sm">
           Post

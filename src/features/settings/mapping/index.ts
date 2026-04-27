@@ -13,10 +13,11 @@ export const mapToProfileForm = (user: UserMeResponse): ProfileFormData => ({
   displayName: user.displayName ?? "",
   username: user.username,
   bioDescription: user.bioDescription ?? "",
-  gender: user.gender ?? "",
+  gender: user.gender ? user.gender.toLowerCase().replace(/_/g, "-") : "",
+  location: user.location ?? "",
   avatarUrl: user.avatarUrl ?? "",
   bannerUrl: user.bannerUrl ?? "",
-  socialLinks: user.socialLinks.length > 0 ? user.socialLinks : [{ platform: "website", url: "" }],
+  socialLinks: user.socialLinks.length > 0 ? user.socialLinks : [""],
 });
 
 export const mapToAccountForm = (user: UserMeResponse): AccountFormData => ({

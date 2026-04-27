@@ -1,6 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 
 export type PostCategory = "music" | "lecture" | "podcast" | "voicenote";
+export type PostVisibility = "everyone" | "follows" | "private";
 
 export type PostAuthor = {
   id: string;

@@ -2,16 +2,16 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const AppTopBarLoading = () => {
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useState(15);
 
   useEffect(() => {
     const timer = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 90) return prev;
         const remaining = 90 - prev;
-        return prev + remaining * 0.08;
+        return prev + remaining * 0.05;
       });
-    }, 200);
+    }, 50);
 
     return () => clearInterval(timer);
   }, []);

@@ -10,7 +10,7 @@ function ProfileCover({ coverUrl, username }: ProfileCoverProps) {
     <AppImage
       src={coverUrl}
       alt={`${username}'s cover`}
-      mode="blur"
+      mode="cover"
       blurLevel="xl"
       brightness={0.35}
       aspectRatio="aspect-[4/1]"

@@ -2,7 +2,7 @@ import { showErrorMessage } from "@/hooks/useMessage";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
 import { getUserMeApi } from "@/features/settings/api";
-import { mapToProfileForm, mapToAccountForm, mapToPrivacyForm } from "./userSettingsMappers";
+import { mapToProfileForm, mapToAccountForm, mapToPrivacyForm } from "../mapping";
 import type { ProfileFormData, AccountFormData, PrivacyFormData } from "@/features/settings/types";
 
 type MappedUserData = {
@@ -18,9 +18,10 @@ const PROFILE_DEFAULTS: ProfileFormData = {
   username: "",
   bioDescription: "",
   gender: "",
+  location: "",
   avatarUrl: "",
   bannerUrl: "",
-  socialLinks: [{ platform: "website", url: "" }],
+  socialLinks: [""],
 };
 
 const ACCOUNT_DEFAULTS: AccountFormData = {
@@ -41,7 +42,7 @@ export const useUserSettings = () => {
     queryFn: getUserMeApi,
     meta: {
       onError: (err: unknown) => {
-        showErrorMessage("Lỗi tải Settings: Không thể lấy thông tin người dùng");
+        showErrorMessage("Failed to load settings: Cannot retrieve user information");
         console.error("Settings API Error:", err);
       },
     },

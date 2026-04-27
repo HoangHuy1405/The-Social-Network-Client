@@ -1,21 +1,20 @@
 import type { LucideIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
 export type ProfileData = {
   id: string;
   username: string;
-  handle: string;
-  bio: string;
+  displayName: string | null;
+  bioDescription: string | null;
   avatarUrl: string;
   coverUrl: string;
-  websiteUrl?: string;
-  location?: string;
-  joinedAt: string;
-  specialty?: string;
-  totalPosts: number;
-  followers: number;
-  following: number;
-  likes: number;
-  totalListenTime: string;
+  location: string | null;
+  gender: string | null;
+  socialLinks: string[];
+  followersCount: number;
+  followingCount: number;
+  createdAt: string;
+  isFollowing: boolean;
   isOwner: boolean;
 };
 
@@ -23,7 +22,7 @@ export type PostFilterOption = "all" | "music" | "podcast" | "lecture" | "voicen
 
 export type ProfileDetailItem = {
   key: string;
-  icon: LucideIcon;
+  icon: LucideIcon | ReactNode;
   label: string;
   value: string;
   isLink?: boolean;

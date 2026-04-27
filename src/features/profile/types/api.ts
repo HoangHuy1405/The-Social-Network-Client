@@ -1,0 +1,25 @@
+export type UserProfileResponse = {
+  id: string;
+  email: string;
+  username: string;
+  phoneNumber: string | null;
+  roles: string[];
+  status: "ACTIVE" | "INACTIVE" | "BANNED";
+  firstName: string;
+  lastName: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  bannerUrl: string | null;
+  bioDescription: string | null;
+  gender: string | null;
+  location: string | null;
+  socialLinks: string[];
+  isPrivate: boolean;
+  followersVisibility: string;
+  followingVisibility: string;
+  showActivity: boolean;
+  followersCount: number;
+  followingCount: number;
+  isFollowing: boolean;
+  createdAt: string;
+};

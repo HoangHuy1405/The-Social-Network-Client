@@ -1,16 +1,30 @@
 import { useAutoScroll } from "@/hooks/useAutoScroll";
+import { useParams } from "react-router-dom";
+import { useAppSelector } from "@/store";
+import { useUserProfile } from "../hooks/useUserProfile";
+import type { ProfileData } from "../types";
 import ProfileCover from "../components/ProfileCover";
 import ProfileUserInfo from "../components/ProfileUserInfo";
 import ProfileActions from "../components/ProfileActions";
 import ProfileDetailsCard from "../components/ProfileDetailsCard";
 import ProfilePostFeed from "../components/ProfilePostFeed";
-import { MOCK_PROFILE, MOCK_PROFILE_POSTS } from "../mocks";
+import { MOCK_PROFILE_POSTS } from "../mocks";
 
 function ProfilePage() {
-  const profile = MOCK_PROFILE;
+  const { username } = useParams<{ username: string }>();
+  const currentUser = useAppSelector((state) => state.auth.username);
+  const { profileForm } = useUserProfile(username);
+
   const posts = MOCK_PROFILE_POSTS;
 
   useAutoScroll(260);
+
+  const formValues = profileForm.watch();
+
+  const profile: ProfileData = {
+    ...formValues,
+    isOwner: Boolean(username && currentUser === username),
+  };
 
   return (
     <div className="flex flex-col">

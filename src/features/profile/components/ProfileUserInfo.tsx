@@ -15,9 +15,13 @@ function ProfileUserInfo({ profile }: ProfileUserInfoProps) {
         className="size-20 text-2xl shrink-0"
       />
       <div className="flex flex-col gap-0.5 min-w-0">
-        <span className="text-lg font-bold text-foreground leading-tight truncate">{profile.username}</span>
-        <span className="text-sm text-muted-foreground truncate">{profile.handle}</span>
-        <p className="text-sm text-muted-foreground leading-snug mt-0.5 line-clamp-2">{profile.bio}</p>
+        <span className="text-lg font-bold text-foreground leading-tight truncate">
+          {profile.displayName || profile.username}
+        </span>
+        <span className="text-sm text-muted-foreground truncate">@{profile.username}</span>
+        {profile.bioDescription && (
+          <p className="text-sm text-muted-foreground leading-snug mt-0.5 line-clamp-2">{profile.bioDescription}</p>
+        )}
       </div>
     </div>
   );

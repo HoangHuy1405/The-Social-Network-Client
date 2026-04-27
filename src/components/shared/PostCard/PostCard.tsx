@@ -4,7 +4,7 @@ import { AppImage } from "@/components/core/AppImage";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { AudioPlayer } from "@/components/shared/AudioPlayer";
 import { cn } from "@/lib/utils";
-import { POST_ACTIONS, CATEGORY_STYLES } from "@/constants/post";
+import { POST_ACTIONS, POST_CATEGORIES } from "@/constants/post";
 import type { PostData } from "@/types/post";
 import { useIsMobile } from "@/hooks/useIsMobile";
 
@@ -16,7 +16,7 @@ const LEFT_ACTION_COUNT = 2;
 
 function PostCard({ post }: PostCardProps) {
   const isMobile = useIsMobile();
-  const categoryStyle = CATEGORY_STYLES[post.category];
+  const categoryStyle = POST_CATEGORIES[post.category];
   const leftActions = POST_ACTIONS.slice(0, LEFT_ACTION_COUNT);
   const rightActions = POST_ACTIONS.slice(LEFT_ACTION_COUNT);
 

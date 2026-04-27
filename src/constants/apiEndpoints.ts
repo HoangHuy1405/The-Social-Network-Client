@@ -6,6 +6,9 @@ export const API_ENDPOINTS = {
   },
   user: {
     me: "/users/me",
+    profile: "/users/me/profile",
+    changePassword: "/users/me/change-password",
+    privacy: "/users/me/privacy",
   },
   media: {
     signature: "/media/signature",

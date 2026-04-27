@@ -6,6 +6,7 @@ import { useTheme } from "@/hooks";
 import { useLogout } from "@/features/auth/hooks/useLogout";
 import type { ButtonVariant } from "@/components/core/AppButton";
 import { useAppSelector } from "@/store";
+import { useNavigate } from "react-router-dom";
 
 type UserPopupProps = {
   isMobile?: boolean;
@@ -28,6 +29,12 @@ function UserPopup({ isMobile, onViewProfile, onLogout }: UserPopupProps) {
   const { theme, toggleTheme } = useTheme();
   const { handleLogout } = useLogout();
   const { username } = useAppSelector((state) => state.auth);
+  const navigate = useNavigate();
+
+  const handleViewProfileClick = () => {
+    if (username) navigate(`/users/${username}`);
+    onViewProfile();
+  };
 
   // Mobile-only items injected before the separator
   const mobileItems: MenuItem[] = isMobile
@@ -54,7 +61,7 @@ function UserPopup({ isMobile, onViewProfile, onLogout }: UserPopupProps) {
       type: "button",
       label: "View Profile",
       icon: <User className="size-4 shrink-0" />,
-      onClick: onViewProfile,
+      onClick: handleViewProfileClick,
       variant: "ghost",
     },
     ...mobileItems,

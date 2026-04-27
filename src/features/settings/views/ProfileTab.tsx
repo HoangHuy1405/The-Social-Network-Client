@@ -1,24 +1,27 @@
 import { useState, useMemo } from "react";
-import { Camera, ImageIcon, Plus, Trash2, Link as LinkIcon } from "lucide-react";
+import { Camera, ImageIcon, Plus, Trash2 } from "lucide-react";
 import { AppImage } from "@/components/core/AppImage";
 import { AppAvatar } from "@/components/core/AppAvatar";
 import SettingsSection from "../components/SettingsSection";
 import MediaUploadDialog from "../components/MediaUploadDialog";
 import AppInput from "@/components/core/AppInput/AppInput";
 import { AppButton } from "@/components/core/AppButton";
-import AppSelect from "@/components/core/AppSelect/AppSelect";
 import { cn } from "@/lib/utils";
-import { GENDER_OPTIONS, SOCIAL_PLATFORMS, DEFAULT_AVATARS, DEFAULT_BANNERS } from "../constants";
+import { GENDER_OPTIONS, DEFAULT_AVATARS, DEFAULT_BANNERS } from "../constants";
 import { getProfileSections } from "../config/profile.config";
 import { useSettingsForm } from "../contexts/SettingsFormContext";
 import { useAppDispatch } from "@/store";
 import { setAvatarUrl } from "@/store/authSlice";
-import type { SettingsGender, SocialLinkEntry } from "../types";
+import { useUpdateProfileApi } from "../hooks/useUpdateProfileApi";
+import type { SettingsGender } from "../types";
+
+import { getPlatformIcon } from "@/utils/social";
 
 function ProfileTab() {
   const { profileForm } = useSettingsForm();
-  const { watch, setValue } = profileForm;
+  const { watch, setValue, handleSubmit } = profileForm;
   const dispatch = useAppDispatch();
+  const { mutate: updateProfile, isPending } = useUpdateProfileApi();
 
   const avatarUrl = watch("avatarUrl");
   const bannerUrl = watch("bannerUrl");
@@ -28,7 +31,7 @@ function ProfileTab() {
   const [avatarDialogOpen, setAvatarDialogOpen] = useState(false);
   const [bannerDialogOpen, setBannerDialogOpen] = useState(false);
 
-  const addSocialLink = () => setValue("socialLinks", [...socialLinks, { platform: "website", url: "" }]);
+  const addSocialLink = () => setValue("socialLinks", [...socialLinks, ""]);
 
   const removeSocialLink = (index: number) =>
     setValue(
@@ -36,11 +39,25 @@ function ProfileTab() {
       socialLinks.filter((_, i) => i !== index),
     );
 
-  const updateSocialLink = (index: number, field: keyof SocialLinkEntry, value: string) =>
+  const updateSocialLinkUrl = (index: number, url: string) => {
     setValue(
       "socialLinks",
-      socialLinks.map((link, i) => (i === index ? { ...link, [field]: value } : link)),
+      socialLinks.map((link, i) => (i === index ? url : link)),
     );
+  };
+
+  const handleSave = handleSubmit((data) => {
+    updateProfile({
+      displayName: data.displayName,
+      bioDescription: data.bioDescription,
+      gender: data.gender,
+      location: data.location,
+      avatarUrl: data.avatarUrl,
+      bannerUrl: data.bannerUrl,
+      // Pass the valid URLs to the API backend
+      socialLinks: data.socialLinks.filter((url) => !!url),
+    });
+  });
 
   const profileSections = useMemo(
     () =>
@@ -56,6 +73,8 @@ function ProfileTab() {
         setDescription: (v) => setValue("bioDescription", v),
         gender: watch("gender"),
         setGender: (v) => setValue("gender", v as SettingsGender),
+        location: watch("location"),
+        setLocation: (v) => setValue("location", v),
         genderOptions: GENDER_OPTIONS,
         onRecord: () => {},
       }),
@@ -66,6 +85,7 @@ function ProfileTab() {
       watch("username"),
       watch("bioDescription"),
       watch("gender"),
+      watch("location"),
       setValue,
     ],
   );
@@ -142,18 +162,14 @@ function ProfileTab() {
         <div className="p-4 flex flex-col gap-3">
           {socialLinks.map((link, i) => (
             <div key={i} className="flex items-center gap-2">
-              <AppSelect
-                value={link.platform}
-                onValueChange={(v) => updateSocialLink(i, "platform", v)}
-                options={SOCIAL_PLATFORMS}
-                triggerClassName="w-36 shrink-0"
-              />
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border bg-muted/50">
+                {getPlatformIcon(link)}
+              </div>
               <AppInput
                 variant="filled"
                 placeholder="https://..."
-                value={link.url}
-                onChange={(e) => updateSocialLink(i, "url", e.target.value)}
-                prefix={<LinkIcon className="size-3.5" />}
+                value={link}
+                onChange={(e) => updateSocialLinkUrl(i, e.target.value)}
                 fullWidth
               />
               <AppButton variant="ghost" size="icon-sm" onClick={() => removeSocialLink(i)}>
@@ -169,7 +185,9 @@ function ProfileTab() {
       </SettingsSection>
 
       <div className="flex justify-end">
-        <AppButton onClick={() => {}}>Save changes</AppButton>
+        <AppButton onClick={handleSave} loading={isPending}>
+          Save changes
+        </AppButton>
       </div>
 
       <MediaUploadDialog

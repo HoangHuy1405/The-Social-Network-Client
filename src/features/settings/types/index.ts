@@ -72,13 +72,6 @@ export type VisibilityOption = "everyone" | "followers" | "only-me";
 
 export type AppLanguage = "en" | "vi";
 
-export type SocialLinkEntry = {
-  platform: string;
-  url: string;
-};
-
-// ─── Per-tab form data types ──────────────────────────────────────────────────
-
 export type ProfileFormData = {
   firstName: string;
   lastName: string;
@@ -86,9 +79,10 @@ export type ProfileFormData = {
   username: string;
   bioDescription: string;
   gender: string;
+  location: string;
   avatarUrl: string;
   bannerUrl: string;
-  socialLinks: SocialLinkEntry[];
+  socialLinks: string[];
 };
 
 export type AccountFormData = {
