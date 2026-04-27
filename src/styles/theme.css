@@ -162,10 +162,14 @@
   body {
     @apply bg-background text-foreground;
     font-family: "IBM Plex Sans", sans-serif;
+    overflow: hidden;
+    height: 100dvh;
   }
 
   html {
     font-size: var(--font-size);
+    overflow: hidden;
+    height: 100dvh;
   }
 
   h1 {

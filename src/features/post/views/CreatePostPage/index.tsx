@@ -100,7 +100,7 @@ function CreatePostPage() {
               />
             </div>
 
-            <div className="w-full md:w-64 shrink-0">
+            <div>
               <label className="mb-1.5 block text-sm font-semibold">Category</label>
               <Controller
                 name="category"

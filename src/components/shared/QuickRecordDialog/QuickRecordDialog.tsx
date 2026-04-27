@@ -5,7 +5,7 @@ import { AppDialog } from "@/components/core/AppDialog";
 import { AppAvatar } from "@/components/core/AppAvatar";
 import { AppButton } from "@/components/core/AppButton";
 import { cn } from "@/lib/utils";
-import { useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store";
 import { setDraft } from "@/store/postDraftSlice";
 import { ROUTE_PATHS } from "@/constants/routes";
 import { QUICK_POST_CATEGORIES, POST_CATEGORIES } from "@/constants/post";
@@ -18,7 +18,8 @@ type QuickRecordDialogProps = {
 
 function QuickRecordDialog({ open, onOpenChange }: QuickRecordDialogProps) {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
+  const { displayName, username } = useAppSelector((state) => state.auth);
   const [postCategory, setPostCategory] = useState<PostCategory>("voicenote");
   const [title, setTitle] = useState("");
 
@@ -39,8 +40,8 @@ function QuickRecordDialog({ open, onOpenChange }: QuickRecordDialogProps) {
       <div className="flex items-center gap-3">
         <AppAvatar size="lg" />
         <div className="flex flex-col">
-          <span className="text-sm font-semibold leading-tight">Bảo Trân</span>
-          <span className="text-xs text-muted-foreground">@baotran</span>
+          <span className="text-sm font-semibold leading-tight">{displayName || "User"}</span>
+          <span className="text-xs text-muted-foreground">@{username || "username"}</span>
         </div>
       </div>
 
