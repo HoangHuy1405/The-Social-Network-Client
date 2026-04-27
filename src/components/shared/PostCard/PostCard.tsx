@@ -2,11 +2,11 @@ import { AppCard } from "@/components/core/AppCard";
 import { AppButton } from "@/components/core/AppButton";
 import { AppImage } from "@/components/core/AppImage";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { AudioPlayer } from "@/components/shared/AudioPlayer";
 import { cn } from "@/lib/utils";
 import { POST_ACTIONS, POST_CATEGORIES } from "@/constants/post";
 import type { PostData } from "@/types/post";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import AudioPlayer from "../AudioPlayer";
 
 type PostCardProps = {
   post: PostData;
@@ -80,7 +80,7 @@ function PostCard({ post }: PostCardProps) {
       </div>
 
       <div className="pb-3">
-        <AudioPlayer src={post.audioSrc} duration={post.audioDuration} commentCount={post.commentCount} />
+        <AudioPlayer src={post.audioSrc} />
       </div>
 
       <div

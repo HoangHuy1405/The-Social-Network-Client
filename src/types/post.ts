@@ -20,7 +20,6 @@ export type PostData = {
   tags: string[];
   coverUrl?: string;
   audioSrc: string;
-  audioDuration: number;
   commentCount: number;
   listenCount: string;
   replyCount: number;

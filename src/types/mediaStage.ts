@@ -1,3 +1,5 @@
+type MediaKind = "image" | "audio" | "video" | null;
+
 type MediaInputProps = {
   onSelect: (file: File) => void;
   accept?: string;
@@ -13,6 +15,7 @@ type MediaPreviewProps = {
 type UseMediaStageReturn = {
   stagedFile: File | null;
   previewUrl: string | null;
+  mediaKind: MediaKind;
   isStaging: boolean;
   stageFile: (file: File) => void;
   stageUrl: (url: string) => void;
@@ -20,4 +23,4 @@ type UseMediaStageReturn = {
   clear: () => void;
 };
 
-export type { MediaInputProps, MediaPreviewProps, UseMediaStageReturn };
+export type { MediaKind, MediaInputProps, MediaPreviewProps, UseMediaStageReturn };

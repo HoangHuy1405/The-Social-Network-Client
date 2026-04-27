@@ -1,20 +1,16 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useForm, Controller } from "react-hook-form";
-import { useAppSelector } from "@/store";
-import { clearDraft } from "@/store/postDraftSlice";
 import { AppButton } from "@/components/core/AppButton";
 import { AppInput } from "@/components/core/AppInput";
 import { AppSelect } from "@/components/core/AppSelect";
 import { POST_CATEGORIES, POST_VISIBILITY_OPTIONS } from "@/constants/post";
 import type { PostCategory, PostVisibility } from "@/types/post";
-import { toApiEnum } from "@/utils/format";
 import CoverImagePicker from "./components/CoverImagePicker";
 import AudioSection from "./components/AudioSection";
 import RichTextEditor from "@/components/shared/RichTextEditor";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_PATHS } from "@/constants/routes";
 import { Separator } from "@/components/ui/separator";
+import { toApiEnum } from "@/utils/api";
 
 type CreatePostFormValues = {
   title: string;
@@ -26,9 +22,7 @@ type CreatePostFormValues = {
 };
 
 function CreatePostPage() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const draft = useAppSelector((state) => state.postDraft);
 
   const {
     control,
@@ -36,19 +30,15 @@ function CreatePostPage() {
     formState: { isValid },
   } = useForm<CreatePostFormValues>({
     defaultValues: {
-      title: draft.title || "",
+      title: "",
       description: "",
-      category: draft.category || "voicenote",
+      category: "voicenote",
       visibility: "everyone",
-      audioUrl: draft.audioBlobUrl,
+      audioUrl: null,
       coverUrl: "",
     },
     mode: "onChange",
   });
-
-  useEffect(() => {
-    dispatch(clearDraft());
-  }, [dispatch]);
 
   const onSubmit = async (values: CreatePostFormValues) => {
     if (!values.title.trim()) return;
@@ -139,7 +129,11 @@ function CreatePostPage() {
 
         <Separator />
 
-        <Controller name="audioUrl" control={control} render={({ field }) => <AudioSection audioBlobUrl={field.value} />} />
+        <Controller
+          name="audioUrl"
+          control={control}
+          render={({ field }) => <AudioSection onChange={field.onChange} initialUrl={field.value} />}
+        />
 
         <Separator />
 

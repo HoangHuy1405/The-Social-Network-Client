@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import type { UseMediaStageReturn } from "@/types/mediaStage";
+import type { MediaKind, UseMediaStageReturn } from "@/types/mediaStage";
 
 /**
  * Manages the temporary "staging area" between the user picking a file and actually uploading it.
@@ -11,6 +11,7 @@ import type { UseMediaStageReturn } from "@/types/mediaStage";
 export const useMediaStage = (): UseMediaStageReturn => {
   const [stagedFile, setStagedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [mediaKind, setMediaKind] = useState<MediaKind>(null);
   const [isStaging, setIsStaging] = useState(false);
   const blobUrlRef = useRef<string | null>(null);
 
@@ -28,6 +29,16 @@ export const useMediaStage = (): UseMediaStageReturn => {
       blobUrlRef.current = url;
       setStagedFile(file);
       setPreviewUrl(url);
+      // Derive kind from MIME so consumers skip MIME parsing
+      let kind: MediaKind = null;
+      if (file.type.startsWith("audio")) {
+        kind = "audio";
+      } else if (file.type.startsWith("video")) {
+        kind = "video";
+      } else if (file.type.startsWith("image")) {
+        kind = "image";
+      }
+      setMediaKind(kind);
     },
     [revokePrevious],
   );
@@ -63,11 +74,12 @@ export const useMediaStage = (): UseMediaStageReturn => {
     revokePrevious();
     setStagedFile(null);
     setPreviewUrl(null);
+    setMediaKind(null);
   }, [revokePrevious]);
 
   useEffect(() => {
     return () => revokePrevious();
   }, [revokePrevious]);
 
-  return { stagedFile, previewUrl, isStaging, stageFile, stageUrl, stageRemoteUrl, clear };
+  return { stagedFile, previewUrl, mediaKind, isStaging, stageFile, stageUrl, stageRemoteUrl, clear };
 };

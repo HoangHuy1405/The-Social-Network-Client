@@ -34,3 +34,8 @@ export const handleApiError = (error: unknown, fallback = "An unexpected error o
 
   showErrorMessage(message || fallback);
 };
+
+export const toApiEnum = (value: string): string => {
+  if (!value) return "";
+  return value.toUpperCase().replace(/[-\s]+/g, "_");
+};

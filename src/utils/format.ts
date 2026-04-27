@@ -25,7 +25,8 @@ export const formatDateUi = (dateString: string): string => {
   }
 };
 
-export const toApiEnum = (value: string): string => {
-  if (!value) return "";
-  return value.toUpperCase().replace(/[-\s]+/g, "_");
+export const formatTime = (seconds: number): string => {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 };
