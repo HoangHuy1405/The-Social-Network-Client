@@ -1,19 +1,22 @@
 import { useRef, useState } from "react";
 import { Mic, Upload, ExternalLink, Check, Music, Podcast } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { AppDialog } from "@/components/core/AppDialog";
 import { AppAvatar } from "@/components/core/AppAvatar";
 import { AppButton } from "@/components/core/AppButton";
 import { AppInput } from "@/components/core/AppInput";
+import { AppSelect } from "@/components/core/AppSelect";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/store";
+import { useNavigate } from "react-router-dom";
 import { ROUTE_PATHS } from "@/constants/routes";
-import { QUICK_POST_CATEGORIES, POST_CATEGORIES } from "@/constants/post";
+import { QUICK_POST_CATEGORIES, POST_CATEGORIES, POST_VISIBILITY_OPTIONS } from "@/constants/post";
 import { useMediaStage } from "@/hooks/useMediaStage";
-import { useMediaUpload } from "@/hooks/useMediaUpload";
+import { useMediaUploadBatch } from "@/hooks/useMediaUploadBatch";
+import { useCreatePost } from "@/features/post/hooks/useCreatePost";
+import { toApiEnum } from "@/utils/api";
 import AudioRecorder from "@/components/shared/AudioRecorder";
 import AudioPlayer from "@/components/shared/AudioPlayer";
-import type { PostCategory } from "@/types/post";
+import type { PostCategory, PostVisibility } from "@/types/post";
 
 type QuickRecordDialogProps = {
   open: boolean;
@@ -24,11 +27,13 @@ function QuickRecordDialog({ open, onOpenChange }: QuickRecordDialogProps) {
   const navigate = useNavigate();
   const { displayName, username } = useAppSelector((state) => state.auth);
   const [postCategory, setPostCategory] = useState<PostCategory>("voicenote");
+  const [visibility, setVisibility] = useState<PostVisibility>("everyone");
   const [title, setTitle] = useState("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { stagedFile, previewUrl, mediaKind, clear, stageFile } = useMediaStage();
-  const { mutate: upload, isPending } = useMediaUpload();
+  const { mutateAsync: upload, isPending: isUploading } = useMediaUploadBatch();
+  const { mutateAsync: publishPost, isPending: isPublishing } = useCreatePost();
 
   const handleClose = (nextOpen: boolean) => {
     if (!nextOpen) clear();
@@ -42,18 +47,20 @@ function QuickRecordDialog({ open, onOpenChange }: QuickRecordDialogProps) {
     e.target.value = "";
   };
 
-  const handlePost = () => {
-    if (!stagedFile) return;
-    upload(
-      { file: stagedFile, mediaType: "AUDIO", context: "FEED" },
-      {
-        onSuccess: () => {
-          clear();
-          onOpenChange(false);
-          navigate(ROUTE_PATHS.CREATE_POST);
-        },
-      },
-    );
+  const handlePost = async () => {
+    if (!stagedFile || !title.trim()) return;
+
+    const uploaded = await upload({ items: [{ file: stagedFile, mediaType: "AUDIO" }] });
+
+    await publishPost({
+      title: title,
+      category: toApiEnum(postCategory) as PostCategory,
+      visibility: toApiEnum(visibility) as PostVisibility,
+      mediaItems: uploaded,
+    });
+
+    clear();
+    onOpenChange(false);
   };
 
   const handleSwitchToEditor = () => {
@@ -128,12 +135,31 @@ function QuickRecordDialog({ open, onOpenChange }: QuickRecordDialogProps) {
       </div>
 
       <div className="flex items-center justify-between border-t border-border pt-3">
-        <AppButton variant="ghost" size="sm" onClick={handleSwitchToEditor} trailingIcon={<ExternalLink className="size-4" />}>
-          Switch To Editor
-        </AppButton>
-        <AppButton variant="default" size="sm" disabled={!stagedFile || isPending} onClick={handlePost}>
-          {isPending ? "Posting…" : "Post"}
-        </AppButton>
+        <div className="w-36">
+          <AppSelect
+            value={visibility}
+            onValueChange={(val) => setVisibility(val as PostVisibility)}
+            options={POST_VISIBILITY_OPTIONS}
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <AppButton
+            variant="ghost"
+            size="sm"
+            onClick={handleSwitchToEditor}
+            trailingIcon={<ExternalLink className="size-4" />}
+          >
+            Switch To Editor
+          </AppButton>
+          <AppButton
+            variant="default"
+            size="sm"
+            disabled={!stagedFile || !title.trim() || isUploading || isPublishing}
+            onClick={() => void handlePost()}
+          >
+            {isUploading || isPublishing ? "Posting…" : "Post"}
+          </AppButton>
+        </div>
       </div>
     </AppDialog>
   );

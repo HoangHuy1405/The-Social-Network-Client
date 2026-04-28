@@ -1,6 +1,6 @@
 type MediaType = "AVATAR" | "BANNER" | "POST_IMAGE" | "POST_VIDEO" | "AUDIO";
 
-type MediaContext = "PROFILE" | "FEED";
+type MediaContext = "PROFILE" | "POST";
 
 type CloudinarySignatureResponse = {
   signature: string;
@@ -15,12 +15,24 @@ type CloudinaryUploadResult = {
   public_id: string;
 };
 
+// Single-item register payload — used by useMediaUpload (avatar, banner, etc.)
 type MediaRegisterPayload = {
   url: string;
   publicId: string;
   mediaType: MediaType;
   context: MediaContext;
 };
+
+// --- Batch types (used by useMediaUploadBatch) ---
+
+// Lightweight result per file after Cloudinary upload — passed directly into POST /posts payload
+type CloudinaryUploadedItem = {
+  url: string;
+  publicId: string;
+  mediaType: MediaType;
+};
+
+// ---
 
 type MediaRegisterResult = {
   id: string;
@@ -33,6 +45,7 @@ type MediaRegisterResult = {
   createdAt: string;
 };
 
+// Single-file upload hook params/result
 type UploadMediaParams = {
   file: File;
   mediaType: MediaType;
@@ -44,13 +57,30 @@ type UploadMediaResult = {
   publicId: string;
 };
 
+// One file entry for the batch upload hook
+type UploadItem = {
+  file: File;
+  mediaType: MediaType;
+};
+
+// Batch upload hook params/result
+type UploadBatchParams = {
+  items: UploadItem[];
+};
+
+type UploadBatchResult = CloudinaryUploadedItem[];
+
 export type {
   MediaType,
   MediaContext,
   CloudinarySignatureResponse,
   CloudinaryUploadResult,
+  CloudinaryUploadedItem,
   MediaRegisterPayload,
   MediaRegisterResult,
   UploadMediaParams,
   UploadMediaResult,
+  UploadItem,
+  UploadBatchParams,
+  UploadBatchResult,
 };

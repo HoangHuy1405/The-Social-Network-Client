@@ -6,23 +6,28 @@ import { cn } from "@/lib/utils";
 
 type CoverImagePickerProps = {
   onSelect: (url: string) => void;
+  onFileChange: (file: File | null) => void;
 };
 
-function CoverImagePicker({ onSelect }: CoverImagePickerProps) {
+function CoverImagePicker({ onSelect, onFileChange }: CoverImagePickerProps) {
   const { stagedFile, previewUrl, isStaging, stageFile, stageRemoteUrl, clear } = useMediaStage();
 
   const handleClear = () => {
     clear();
     onSelect("");
+    onFileChange(null);
   };
 
   const handleStageFile = (file: File) => {
     stageFile(file);
+    onFileChange(file);
     onSelect(URL.createObjectURL(file));
   };
 
   const handleStageRemoteUrl = async (url: string) => {
     await stageRemoteUrl(url);
+    // Remote preset URLs skip Cloudinary — notify parent with null file
+    onFileChange(null);
     onSelect(url);
   };
 

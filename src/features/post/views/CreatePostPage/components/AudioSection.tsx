@@ -6,25 +6,23 @@ import FileDropzoneInput from "@/components/shared/FileDropzoneInput";
 
 type AudioSectionProps = {
   onChange: (url: string | null) => void;
+  onFileChange: (file: File | null) => void;
   initialUrl?: string | null;
 };
 
-function AudioSection({ onChange, initialUrl }: AudioSectionProps) {
-  const { previewUrl, mediaKind, stageFile, clear } = useMediaStage();
+function AudioSection({ onChange, onFileChange, initialUrl }: AudioSectionProps) {
+  const { stagedFile, previewUrl, mediaKind, stageFile, clear } = useMediaStage();
 
-  // Sync initial URL from draft (passed once on mount via react-hook-form defaultValues)
   const initializedRef = useRef(false);
   useEffect(() => {
     if (initializedRef.current || !initialUrl) return;
     initializedRef.current = true;
-    // initialUrl is a remote URL — no blob to track, just display
-    // AudioPlayer accepts any URL so this is sufficient
   }, [initialUrl]);
 
-  // Keep RHF field in sync whenever previewUrl changes
   useEffect(() => {
     onChange(previewUrl);
-  }, [previewUrl, onChange]);
+    onFileChange(stagedFile);
+  }, [previewUrl, stagedFile, onChange, onFileChange]);
 
   const displayUrl = previewUrl ?? initialUrl ?? null;
   const showPlayer = displayUrl !== null && (mediaKind === "audio" || initialUrl);
@@ -32,6 +30,7 @@ function AudioSection({ onChange, initialUrl }: AudioSectionProps) {
   const handleClear = () => {
     clear();
     onChange(null);
+    onFileChange(null);
   };
 
   return (
@@ -42,10 +41,8 @@ function AudioSection({ onChange, initialUrl }: AudioSectionProps) {
         <AudioPlayer src={displayUrl!} onClear={handleClear} />
       ) : (
         <>
-          {/* Mic recording */}
           <AudioRecorder onRecorded={stageFile} enableSpacebarShortcut={true} />
 
-          {/* Drag-drop / browse upload */}
           <FileDropzoneInput
             onSelect={stageFile}
             accept="audio/*"

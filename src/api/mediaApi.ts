@@ -31,5 +31,6 @@ export const uploadToCloudinary = async (
   return data;
 };
 
+// Single-item register — used for avatar / banner uploads
 export const registerMedia = (payload: MediaRegisterPayload): Promise<MediaRegisterResult> =>
   http.post<MediaRegisterResult>(API_ENDPOINTS.media.register, payload);

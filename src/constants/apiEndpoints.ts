@@ -13,6 +13,10 @@ export const API_ENDPOINTS = {
   media: {
     signature: "/media/signature",
     register: "/media/register",
+    registerBatch: "/media/register/batch",
+  },
+  post: {
+    create: "/feed/posts",
   },
 } as const;
 
