@@ -14,6 +14,35 @@ type PostCardProps = {
 
 const LEFT_ACTION_COUNT = 2;
 
+const HASHTAG_REGEX = /(#\w+)/g;
+
+function StyledHashtagText({ text }: { text: string }) {
+  const parts = text.split(HASHTAG_REGEX);
+  return (
+    <>
+      {parts.map((part, i) =>
+        HASHTAG_REGEX.test(part) ? (
+          <span key={i} className="text-primary font-medium cursor-pointer hover:underline">
+            {part}
+          </span>
+        ) : (
+          <span key={i}>{part}</span>
+        ),
+      )}
+    </>
+  );
+}
+
+const RICH_TEXT_STYLES = [
+  "[&_p]:mb-2",
+  "[&_h1]:text-2xl [&_h1]:font-bold [&_h1]:mt-4 [&_h1]:mb-2",
+  "[&_h2]:text-xl [&_h2]:font-semibold [&_h2]:mt-3 [&_h2]:mb-2",
+  "[&_ul]:list-disc [&_ul]:pl-5 [&_ul]:my-2",
+  "[&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-2",
+  "[&_blockquote]:border-l-4 [&_blockquote]:border-primary",
+  "[&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:my-2",
+].join(" ");
+
 function PostCard({ post }: PostCardProps) {
   const isMobile = useIsMobile();
   const categoryStyle = POST_CATEGORIES[post.category];
@@ -24,13 +53,12 @@ function PostCard({ post }: PostCardProps) {
     <AppCard radius="lg" className={cn("gap-0 py-0", isMobile && "rounded-none")}>
       <div className="flex items-center gap-3 pt-4 pb-3">
         <Avatar>
-          <AvatarImage src={post.author.avatarUrl} />
+          <AvatarImage src={post.author.avatarUrl} referrerPolicy="no-referrer" />
           <AvatarFallback>{post.author.username.charAt(0).toUpperCase()}</AvatarFallback>
         </Avatar>
 
         <div className="flex flex-1 items-center gap-2 min-w-0">
           <span className="text-sm font-bold text-foreground truncate">{post.author.username}</span>
-          <span className="text-xs text-muted-foreground truncate">{post.author.handle}</span>
           <span className="text-xs text-muted-foreground">·</span>
           <span className="text-xs text-muted-foreground whitespace-nowrap">{post.createdAt}</span>
           <span
@@ -39,10 +67,6 @@ function PostCard({ post }: PostCardProps) {
             {categoryStyle.label}
           </span>
         </div>
-
-        <AppButton variant={post.isFollowing ? "outline" : "default"} size="sm" className="shrink-0 text-xs h-8">
-          {post.isFollowing ? "✓ Following" : "✦ Follow"}
-        </AppButton>
       </div>
 
       {post.coverUrl && (
@@ -51,7 +75,7 @@ function PostCard({ post }: PostCardProps) {
           blurLevel="xl"
           brightness={0.35}
           src={post.coverUrl}
-          alt={post.caption}
+          alt={post.title}
           className="-mx-4"
           style={{ width: "calc(100% + 2rem)" }}
         />
@@ -59,28 +83,20 @@ function PostCard({ post }: PostCardProps) {
 
       <div className="flex gap-3 pb-3 pt-3">
         <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-bold text-foreground leading-snug">{post.caption}</h4>
+          <h4 className="text-sm font-bold text-foreground leading-snug">
+            <StyledHashtagText text={post.title} />
+          </h4>
           {post.description && (
-            <p className="mt-1 text-sm text-muted-foreground leading-relaxed line-clamp-2">{post.description}</p>
-          )}
-          {post.tags.length > 0 && (
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="text-xs text-primary font-medium
-                    cursor-pointer hover:underline"
-                >
-                  #{tag}
-                </span>
-              ))}
-            </div>
+            <div
+              className={cn("mt-1 text-sm text-muted-foreground leading-relaxed line-clamp-2", RICH_TEXT_STYLES)}
+              dangerouslySetInnerHTML={{ __html: post.description }}
+            />
           )}
         </div>
       </div>
 
       <div className="pb-3">
-        <AudioPlayer src={post.audioSrc} />
+        <AudioPlayer src={post.audioUrl} />
       </div>
 
       <div

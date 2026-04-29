@@ -6,7 +6,6 @@ export type PostVisibility = "everyone" | "follows" | "private";
 export type PostAuthor = {
   id: string;
   username: string;
-  handle: string;
   avatarUrl: string;
 };
 
@@ -15,17 +14,17 @@ export type PostData = {
   author: PostAuthor;
   category: PostCategory;
   createdAt: string;
-  caption: string;
+  title: string;
   description?: string;
-  tags: string[];
-  coverUrl?: string;
-  audioSrc: string;
-  commentCount: number;
-  listenCount: string;
+  hashtags: string[];
+  coverUrl?: string | null;
+  audioUrl: string;
+  // TODO: implement when backend supports these fields
+  listenCount: number;
   replyCount: number;
   repostCount: number;
-  likeCount: number;
-  isFollowing?: boolean;
+  commentsCount: number;
+  likesCount: number;
 };
 
 export type PostCardAction = "listen" | "comment" | "repost" | "like" | "share" | "save";

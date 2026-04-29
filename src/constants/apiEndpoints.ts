@@ -18,6 +18,9 @@ export const API_ENDPOINTS = {
   post: {
     create: "/feed/posts",
   },
+  feed: {
+    list: "/feed",
+  },
 } as const;
 
 export const PUBLIC_ENDPOINTS: string[] = [API_ENDPOINTS.auth.login, API_ENDPOINTS.auth.register];

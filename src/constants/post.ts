@@ -3,9 +3,9 @@ import type { PostActionConfig, PostCategory } from "@/types/post";
 
 export const POST_ACTIONS: PostActionConfig[] = [
   { key: "listen", icon: Headphones, countKey: "listenCount" },
-  { key: "comment", icon: MessageCircle, countKey: "replyCount" },
+  { key: "comment", icon: MessageCircle, countKey: "commentsCount" },
   { key: "repost", icon: Repeat2, countKey: "repostCount" },
-  { key: "like", icon: Heart, countKey: "likeCount" },
+  { key: "like", icon: Heart, countKey: "likesCount" },
   { key: "share", icon: Share2 },
   { key: "save", icon: Bookmark },
 ];
