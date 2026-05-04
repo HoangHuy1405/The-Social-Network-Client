@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
     profile: "/users/me/profile",
     changePassword: "/users/me/change-password",
     privacy: "/users/me/privacy",
+    profileSummary: "/users/:id/profile-summary",
   },
   media: {
     signature: "/media/signature",
@@ -23,4 +24,9 @@ export const API_ENDPOINTS = {
   },
 } as const;
 
-export const PUBLIC_ENDPOINTS: string[] = [API_ENDPOINTS.auth.login, API_ENDPOINTS.auth.register];
+export const PUBLIC_ENDPOINTS: string[] = [
+  API_ENDPOINTS.auth.login,
+  API_ENDPOINTS.auth.register,
+  API_ENDPOINTS.feed.list,
+  API_ENDPOINTS.user.profileSummary,
+];

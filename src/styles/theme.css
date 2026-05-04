@@ -41,6 +41,7 @@
   --font-weight-medium: 600;
   --font-weight-normal: 400;
   --radius: 0.5rem;
+  --shadow-popup: 0 4px 20px -2px rgba(0, 0, 0, 0.08), 0 0 3px rgba(0, 0, 0, 0.04);
   --shadow-2xs: 0 1px 2px 0px hsl(0 0% 0% / 0.04);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.08), 0 1px 2px -1px hsl(0 0% 0% / 0.08);
@@ -92,6 +93,7 @@
   --font-weight-medium: 600;
   --font-weight-normal: 400;
   --radius: 0.5rem;
+  --shadow-popup: 0 4px 20px -2px rgba(255, 255, 255, 0.06), 0 0 3px rgba(255, 255, 255, 0.03);
   --shadow-2xs: 0 1px 2px 0px hsl(0 0% 0% / 0.2);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.25);
   --shadow-sm: 0 1px 3px 0px hsl(0 0% 0% / 0.3), 0 1px 2px -1px hsl(0 0% 0% / 0.3);
@@ -141,6 +143,7 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --shadow-popup: var(--shadow-popup);
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);

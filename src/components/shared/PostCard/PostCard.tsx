@@ -7,6 +7,7 @@ import { POST_ACTIONS, POST_CATEGORIES } from "@/constants/post";
 import type { PostData } from "@/types/post";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import AudioPlayer from "../AudioPlayer";
+import { UserHoverCard } from "../UserHoverCard";
 
 type PostCardProps = {
   post: PostData;
@@ -52,10 +53,14 @@ function PostCard({ post }: PostCardProps) {
   return (
     <AppCard radius="lg" className={cn("gap-0 py-0", isMobile && "rounded-none")}>
       <div className="flex items-center gap-3 pt-4 pb-3">
-        <Avatar>
-          <AvatarImage src={post.author.avatarUrl} referrerPolicy="no-referrer" />
-          <AvatarFallback>{post.author.username.charAt(0).toUpperCase()}</AvatarFallback>
-        </Avatar>
+        <UserHoverCard userId={post.author.id}>
+          <div className="cursor-pointer">
+            <Avatar>
+              <AvatarImage src={post.author.avatarUrl} referrerPolicy="no-referrer" />
+              <AvatarFallback>{post.author.username.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+          </div>
+        </UserHoverCard>
 
         <div className="flex flex-1 items-center gap-2 min-w-0">
           <span className="text-sm font-bold text-foreground truncate">{post.author.username}</span>

@@ -8,7 +8,6 @@ import MessageProvider from "@/contexts/MessageProvider";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { LoadingProvider } from "@/components/core/AppLoading";
 import { AuthGuard } from "@/router/AuthGuard";
-import { GlobalLoadingBridge } from "@/contexts/GlobalLoadingBridge";
 
 function App() {
   return (
@@ -18,7 +17,6 @@ function App() {
           <QueryClientProvider client={queryClient}>
             <MessageProvider />
             <LoadingProvider>
-              <GlobalLoadingBridge />
               <AuthGuard>
                 <Outlet />
               </AuthGuard>

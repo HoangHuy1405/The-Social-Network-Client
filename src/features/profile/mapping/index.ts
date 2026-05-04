@@ -1,5 +1,5 @@
-import type { ProfileData } from "../types";
-import type { UserProfileResponse } from "../types/api";
+import type { ProfileData, ProfileSummaryData } from "../types";
+import type { UserProfileResponse, UserProfileSummaryResponse } from "../types/api";
 
 export const mapToProfileData = (raw: UserProfileResponse): ProfileData => ({
   id: raw.id,
@@ -34,3 +34,13 @@ export const PROFILE_DATA_DEFAULTS: ProfileData = {
   isFollowing: false,
   isOwner: false,
 };
+
+export const mapToProfileSummaryData = (raw: UserProfileSummaryResponse): ProfileSummaryData => ({
+  id: raw.id,
+  username: raw.username,
+  displayName: raw.displayName,
+  avatarUrl: raw.avatarUrl ?? "",
+  bioDescription: raw.bioDescription,
+  followersCount: raw.followersCount ?? 0,
+  followingCount: raw.followingCount ?? 0,
+});

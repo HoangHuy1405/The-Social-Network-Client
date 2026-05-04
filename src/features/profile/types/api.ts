@@ -23,3 +23,13 @@ export type UserProfileResponse = {
   isFollowing: boolean;
   createdAt: string;
 };
+
+export type UserProfileSummaryResponse = {
+  id: string;
+  username: string;
+  displayName: string | null;
+  avatarUrl: string | null;
+  bioDescription: string | null;
+  followersCount: number;
+  followingCount: number;
+};

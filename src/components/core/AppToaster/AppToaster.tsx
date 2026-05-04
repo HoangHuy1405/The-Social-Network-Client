@@ -9,7 +9,7 @@ function AppToaster() {
       toastOptions={{
         duration: 3000,
         classNames: {
-          toast: ["!bg-card !text-card-foreground", "!border !border-border", "!shadow-lg"].join(" "),
+          toast: ["!bg-card !text-card-foreground", "!border !border-border", "!shadow-popup"].join(" "),
           title: "!text-card-foreground !font-semibold",
           description: "!text-muted-foreground",
           closeButton: ["!bg-muted !text-muted-foreground !border-border", "hover:!bg-border/60 hover:!text-foreground"].join(

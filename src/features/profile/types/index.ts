@@ -27,3 +27,13 @@ export type ProfileDetailItem = {
   value: string;
   isLink?: boolean;
 };
+
+export type ProfileSummaryData = {
+  id: string;
+  username: string;
+  displayName: string | null;
+  avatarUrl: string;
+  bioDescription: string | null;
+  followersCount: number;
+  followingCount: number;
+};

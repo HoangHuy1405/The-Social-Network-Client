@@ -1,3 +1,5 @@
+import { cn } from "@/lib/utils";
+
 const BAR_COUNT = 21;
 
 // Generate pseudo-random (but stable) configs for each bar to mimic chaotic audio
@@ -18,8 +20,19 @@ const BAR_DATA = Array.from({ length: BAR_COUNT }, (_, i) => {
   return { delay, duration, maxHeight };
 });
 
-const AppLoading = () => (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+type AppLoadingProps = {
+  fullScreen?: boolean;
+  className?: string;
+};
+
+const AppLoading = ({ fullScreen = true, className }: AppLoadingProps = {}) => (
+  <div
+    className={cn(
+      "flex items-center justify-center",
+      fullScreen && "fixed inset-0 z-50 bg-background/80 backdrop-blur-sm",
+      className
+    )}
+  >
     <div className="flex items-center gap-[3px]" style={{ height: 48 }}>
       {BAR_DATA.map((bar, i) => (
         <div
