@@ -11,7 +11,11 @@ import { handleApiError } from "@/utils/api";
 import { ROUTE_PATHS } from "@/constants/routes";
 import type { LoginResponse } from "@/features/auth/types";
 
-export const useLogin = () => {
+export type UseLoginOptions = {
+  onSuccess?: (data: LoginResponse) => void;
+};
+
+export const useLogin = (options?: UseLoginOptions) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { isLoading, show: showLoading, hide: hideLoading } = useLoading();
@@ -42,7 +46,11 @@ export const useLogin = () => {
     onSuccess: (data) => {
       storeUserCredentials(data);
       showSuccessMessage("Login successful!");
-      void navigate(ROUTE_PATHS.HOME);
+      if (options?.onSuccess) {
+        options.onSuccess(data);
+      } else {
+        void navigate(ROUTE_PATHS.HOME);
+      }
     },
     onError: (error) => handleApiError(error),
     onSettled: () => hideLoading(),

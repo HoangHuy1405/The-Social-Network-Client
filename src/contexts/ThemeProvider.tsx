@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, type ReactNode } from "react";
+import { createContext, useEffect, useMemo, type ReactNode } from "react";
 import { useLocalStorage } from "usehooks-ts";
 
 export type Theme = "light" | "dark" | "system";

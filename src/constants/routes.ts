@@ -5,4 +5,7 @@ export const ROUTE_PATHS = {
   PROFILE: "/users/:username",
   UNAUTHORIZED: "/401",
   CREATE_POST: "/posts/create",
+  POST_DETAIL: "/posts/:id",
+  SEARCH: "/search",
 } as const;
+

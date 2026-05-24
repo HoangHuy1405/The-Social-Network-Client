@@ -7,7 +7,7 @@ import { AppButton } from "@/components/core/AppButton";
 import { AppAvatar } from "@/components/core/AppAvatar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import UserPopup from "./UserPopup";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { checkIsAuthenticated } from "@/utils/auth";
 import { AppLogo } from "@/components/core/AppLogo";
 
@@ -19,9 +19,11 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
   const [popupOpen, togglePopup, setPopupOpen] = useToggle(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const isMobile = useIsMobile();
 
   const isAuth = checkIsAuthenticated();
+  const searchQuery = searchParams.get("search") ?? "";
 
   useOnClickOutside(popupRef as React.RefObject<HTMLElement>, () => setPopupOpen(false));
 
@@ -51,6 +53,22 @@ function AppHeader({ onMobileSidebarToggle }: AppHeaderProps) {
         prefix={<Search className="size-4 text-muted-foreground" />}
         containerClassName="flex-1 max-w-md mx-auto"
         fullWidth
+        value={searchQuery}
+        onChange={(e) => {
+          const val = e.target.value;
+          if (window.location.pathname !== "/") {
+            navigate(`/?search=${encodeURIComponent(val)}`);
+          } else {
+            setSearchParams((prev) => {
+              if (val) {
+                prev.set("search", val);
+              } else {
+                prev.delete("search");
+              }
+              return prev;
+            });
+          }
+        }}
       />
 
       {/* Action buttons */}

@@ -48,6 +48,8 @@ function ProfileTab() {
 
   const handleSave = handleSubmit((data) => {
     updateProfile({
+      firstName: data.firstName,
+      lastName: data.lastName,
       displayName: data.displayName,
       bioDescription: data.bioDescription,
       gender: data.gender,

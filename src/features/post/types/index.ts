@@ -1,7 +1,8 @@
 import type { PostCategory, PostVisibility } from "@/types/post";
 import type { MediaType } from "@/types/media";
+import type { PaginationParams } from "@/types/pagination";
 
-// Matches the mediaItems[] accepted by Feed Service (forwarded to Media Service via Feign)
+// Matches the mediaItems[] accepted by Feed Service
 type MediaItem = {
   url: string;
   publicId: string;
@@ -16,17 +17,24 @@ type CreatePostPayload = {
   mediaItems?: MediaItem[];
 };
 
+type UpdatePostPayload = {
+  title?: string;
+  description?: string;
+  visibility?: PostVisibility;
+  category?: PostCategory;
+};
+
 type PostResponse = {
   id: string;
   authorId: string;
   authorUsername: string;
-  authorAvatarUrl: string;
+  authorAvatarUrl: string | null;
   title: string;
-  description?: string;
-  category: PostCategory;
-  visibility: PostVisibility;
-  coverUrl?: string;
-  audioUrl?: string;
+  description: string | null;
+  category: string;
+  visibility: string;
+  coverUrl: string | null;
+  audioUrl: string | null;
   hashtags: string[];
   likesCount: number;
   commentsCount: number;
@@ -34,4 +42,29 @@ type PostResponse = {
   updatedAt: string;
 };
 
-export type { MediaItem, CreatePostPayload, PostResponse };
+type LikeResponse = {
+  id: string;
+  postId: string;
+  userId: string;
+  createdAt: string;
+};
+
+type GetPostsByUserParams = PaginationParams;
+
+type SearchPostsParams = {
+  q?: string;
+  hashtag?: string;
+  page?: number;
+  size?: number;
+};
+
+export type {
+  MediaItem,
+  CreatePostPayload,
+  UpdatePostPayload,
+  PostResponse,
+  LikeResponse,
+  GetPostsByUserParams,
+  SearchPostsParams,
+};
+

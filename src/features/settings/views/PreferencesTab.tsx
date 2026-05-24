@@ -16,7 +16,7 @@ function PreferencesTab() {
     () =>
       getPreferencesSections({
         theme,
-        setTheme,
+        setTheme: (v) => setTheme(v as "light" | "dark" | "system"),
         language,
         setLanguage: (v) => setLanguage(v as AppLanguage),
         autoplay,

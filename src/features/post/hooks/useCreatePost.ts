@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
-import { createPost } from "@/features/post/api";
+import { createPostApi } from "@/features/post/api";
 import { useLoading, LOADING_TYPE } from "@/hooks/useLoading";
 import { showSuccessMessage } from "@/hooks/useMessage";
 import { handleApiError } from "@/utils/api";
@@ -12,7 +12,7 @@ export const useCreatePost = () => {
   const { show: showLoading, hide: hideLoading } = useLoading(LOADING_TYPE.TOPBAR);
 
   return useMutation<PostResponse, Error, CreatePostPayload>({
-    mutationFn: createPost,
+    mutationFn: createPostApi,
     onMutate: () => showLoading(),
     onSuccess: () => {
       showSuccessMessage("Post published!");

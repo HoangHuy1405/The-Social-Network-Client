@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode, ChangeEvent } from "react";
 import { Fragment } from "react";
 import { ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -45,7 +45,7 @@ function renderItem(item: SettingItemConfig) {
           as={isTextarea ? "textarea" : "input"}
           label={item.label}
           value={item.value}
-          onChange={(e) => item.onChange(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => item.onChange(e.target.value)}
           placeholder={item.placeholder}
           disabled={item.disabled}
           rows={item.rows}

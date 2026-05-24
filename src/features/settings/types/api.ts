@@ -29,6 +29,8 @@ export type UserMeResponse = {
 };
 
 export type UpdateProfileRequest = {
+  firstName?: string;
+  lastName?: string;
   displayName?: string | null;
   bioDescription?: string | null;
   gender?: string | null;

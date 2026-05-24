@@ -1,16 +1,23 @@
+import { useState } from "react";
+import { Heart } from "lucide-react";
 import { AppCard } from "@/components/core/AppCard";
 import { AppButton } from "@/components/core/AppButton";
 import { AppImage } from "@/components/core/AppImage";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { POST_ACTIONS, POST_CATEGORIES } from "@/constants/post";
-import type { PostData } from "@/types/post";
+import type { PostData, PostCardAction } from "@/types/post";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useLikePostApi } from "@/features/post/hooks/useLikePostApi";
 import AudioPlayer from "../AudioPlayer";
 import { UserHoverCard } from "../UserHoverCard";
+import { checkIsAuthenticated } from "@/utils/auth";
+import { QuickLoginDialog } from "@/components/shared/QuickLoginDialog";
+import CommentSection from "@/components/shared/CommentSection";
 
 type PostCardProps = {
   post: PostData;
+  onAction?: (action: PostCardAction, postId: string) => void;
 };
 
 const LEFT_ACTION_COUNT = 2;
@@ -44,9 +51,48 @@ const RICH_TEXT_STYLES = [
   "[&_blockquote]:pl-3 [&_blockquote]:italic [&_blockquote]:my-2",
 ].join(" ");
 
-function PostCard({ post }: PostCardProps) {
+function PostCard({ post, onAction }: PostCardProps) {
   const isMobile = useIsMobile();
   const categoryStyle = POST_CATEGORIES[post.category];
+
+  // Optimistic like state — starts false; real state syncs from query invalidation
+  const [liked, setLiked] = useState(false);
+  const [localLikesCount, setLocalLikesCount] = useState(post.likesCount);
+  const [loginDialogOpen, setLoginDialogOpen] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+
+  const { likeMutation, unlikeMutation } = useLikePostApi();
+  const isLikePending = likeMutation.isPending || unlikeMutation.isPending;
+
+  const handleLike = () => {
+    if (isLikePending) return;
+    if (!checkIsAuthenticated()) {
+      setLoginDialogOpen(true);
+      return;
+    }
+    if (liked) {
+      setLiked(false);
+      setLocalLikesCount((c) => Math.max(0, c - 1));
+      unlikeMutation.mutate(post.id, { onError: () => { setLiked(true); setLocalLikesCount((c) => c + 1); } });
+    } else {
+      setLiked(true);
+      setLocalLikesCount((c) => c + 1);
+      likeMutation.mutate(post.id, { onError: () => { setLiked(false); setLocalLikesCount((c) => Math.max(0, c - 1)); } });
+    }
+  };
+
+  const handleAction = (action: PostCardAction) => {
+    if (action === "like") {
+      handleLike();
+      return;
+    }
+    if (action === "comment") {
+      setShowComments((prev) => !prev);
+      return;
+    }
+    onAction?.(action, post.id);
+  };
+
   const leftActions = POST_ACTIONS.slice(0, LEFT_ACTION_COUNT);
   const rightActions = POST_ACTIONS.slice(LEFT_ACTION_COUNT);
 
@@ -104,10 +150,7 @@ function PostCard({ post }: PostCardProps) {
         <AudioPlayer src={post.audioUrl} />
       </div>
 
-      <div
-        className="flex items-center justify-between border-t
-          border-border/50 py-2"
-      >
+      <div className="flex items-center justify-between border-t border-border/50 py-2">
         <div className="flex items-center gap-1">
           {leftActions.map((action) => {
             const count = action.countKey ? post[action.countKey] : undefined;
@@ -117,8 +160,8 @@ function PostCard({ post }: PostCardProps) {
                 key={action.key}
                 variant="ghost"
                 size="sm"
-                className="gap-1.5 text-muted-foreground
-                  hover:text-foreground h-8 px-2"
+                className="gap-1.5 text-muted-foreground hover:text-foreground h-8 px-2"
+                onClick={() => handleAction(action.key)}
               >
                 <Icon className="size-4" />
                 {count !== undefined && <span className="text-xs">{count}</span>}
@@ -129,6 +172,24 @@ function PostCard({ post }: PostCardProps) {
 
         <div className="flex items-center gap-1">
           {rightActions.map((action) => {
+            if (action.key === "like") {
+              return (
+                <AppButton
+                  key="like"
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "gap-1.5 h-8 px-2",
+                    liked ? "text-red-500 hover:text-red-400" : "text-muted-foreground hover:text-foreground",
+                  )}
+                  onClick={handleLike}
+                >
+                  <Heart className={cn("size-4", liked && "fill-current")} />
+                  <span className="text-xs">{localLikesCount}</span>
+                </AppButton>
+              );
+            }
+
             const count = action.countKey ? post[action.countKey] : undefined;
             const Icon = action.icon;
             return (
@@ -136,8 +197,8 @@ function PostCard({ post }: PostCardProps) {
                 key={action.key}
                 variant="ghost"
                 size="sm"
-                className="gap-1.5 text-muted-foreground
-                  hover:text-foreground h-8 px-2"
+                className="gap-1.5 text-muted-foreground hover:text-foreground h-8 px-2"
+                onClick={() => handleAction(action.key)}
               >
                 <Icon className="size-4" />
                 {count !== undefined && <span className="text-xs">{count}</span>}
@@ -146,8 +207,15 @@ function PostCard({ post }: PostCardProps) {
           })}
         </div>
       </div>
+      {showComments && (
+        <div className="border-t border-border/50 pt-2 pb-4">
+          <CommentSection postId={post.id} />
+        </div>
+      )}
+      <QuickLoginDialog open={loginDialogOpen} onOpenChange={setLoginDialogOpen} />
     </AppCard>
   );
 }
 
 export default PostCard;
+

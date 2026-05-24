@@ -28,7 +28,14 @@ export class ApiError extends Error {
   }
 }
 
-const isPublicEndpoint = (url: string): boolean => PUBLIC_ENDPOINTS.some((ep) => url.startsWith(ep));
+const isPublicEndpoint = (url: string): boolean => {
+  const path = url.split("?")[0];
+  return PUBLIC_ENDPOINTS.some((ep) => {
+    if (ep === path) return true;
+    const regexStr = "^" + ep.replace(/:[^/]+/g, "[^/]+") + "$";
+    return new RegExp(regexStr).test(path);
+  });
+};
 
 const isNetworkError = (error: AxiosError): boolean => {
   return !!error.isAxiosError && !error.response && (error.code === "ERR_NETWORK" || error.message === "Network Error");
@@ -38,7 +45,7 @@ const handleAuthExpired = (): void => {
   store.dispatch(logout());
   showErrorMessage("Session expired. Please log in again.", { duration: 4000 });
   //TODO: handle refresh token here
-  void router.navigate(ROUTE_PATHS.LOGIN);
+  void router.navigate(ROUTE_PATHS.UNAUTHORIZED);
 };
 
 axiosInstance.interceptors.request.use(
@@ -50,8 +57,8 @@ axiosInstance.interceptors.request.use(
     const token = store.getState().auth.accessToken;
 
     if (!token) {
-      void router.navigate(ROUTE_PATHS.LOGIN);
-      return Promise.reject(new ApiError("Unauthenticated — redirecting to login.", null, 401));
+      void router.navigate(ROUTE_PATHS.UNAUTHORIZED);
+      return Promise.reject(new ApiError("Unauthenticated — redirecting to unauthorized.", null, 401));
     }
 
     config.headers.Authorization = `Bearer ${token}`;

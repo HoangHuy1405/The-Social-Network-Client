@@ -1,4 +1,4 @@
-type MediaType = "AVATAR" | "BANNER" | "POST_IMAGE" | "POST_VIDEO" | "AUDIO";
+type MediaType = "AVATAR" | "BANNER" | "COVER" | "POST_IMAGE" | "POST_VIDEO" | "AUDIO";
 
 type MediaContext = "PROFILE" | "POST";
 
