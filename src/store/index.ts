@@ -1,13 +1,22 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from "redux-persist";
-import storage from "redux-persist/lib/storage";
 import { useDispatch, useSelector } from "react-redux";
 import authReducer from "./authSlice";
+
+/**
+ * Explicit localStorage wrapper — avoids the broken ESM resolution of
+ * `redux-persist/lib/storage` under Vite 8 / rolldown.
+ */
+const localStorageAdapter = {
+  getItem: (key: string) => Promise.resolve(localStorage.getItem(key)),
+  setItem: (key: string, value: string) => Promise.resolve(localStorage.setItem(key, value)),
+  removeItem: (key: string) => Promise.resolve(localStorage.removeItem(key)),
+};
 
 const persistConfig = {
   key: "root",
   version: 1,
-  storage,
+  storage: localStorageAdapter,
   whitelist: ["auth"],
 };
 

@@ -6,12 +6,15 @@ type ApiResponse<T = unknown> = {
   data: T;
 };
 
+type FieldErrors = Record<string, string[]>;
+
 type ApiErrorResponse = {
   success: false;
   code: number;
   message: string;
+  errors?: string | FieldErrors;
   timestamp: string;
   data: unknown;
 };
 
-export type { ApiResponse, ApiErrorResponse };
+export type { ApiResponse, ApiErrorResponse, FieldErrors };

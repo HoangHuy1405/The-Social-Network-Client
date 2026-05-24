@@ -28,12 +28,24 @@ export class ApiError extends Error {
   }
 }
 
-const isPublicEndpoint = (url: string): boolean => PUBLIC_ENDPOINTS.some((ep) => url.startsWith(ep));
+const isPublicEndpoint = (url: string): boolean => {
+  const path = url.split("?")[0];
+  return PUBLIC_ENDPOINTS.some((ep) => {
+    if (ep === path) return true;
+    const regexStr = "^" + ep.replace(/:[^/]+/g, "[^/]+") + "$";
+    return new RegExp(regexStr).test(path);
+  });
+};
+
+const isNetworkError = (error: AxiosError): boolean => {
+  return !!error.isAxiosError && !error.response && (error.code === "ERR_NETWORK" || error.message === "Network Error");
+};
 
 const handleAuthExpired = (): void => {
   store.dispatch(logout());
   showErrorMessage("Session expired. Please log in again.", { duration: 4000 });
-  void router.navigate(ROUTE_PATHS.LOGIN);
+  //TODO: handle refresh token here
+  void router.navigate(ROUTE_PATHS.UNAUTHORIZED);
 };
 
 axiosInstance.interceptors.request.use(
@@ -45,8 +57,8 @@ axiosInstance.interceptors.request.use(
     const token = store.getState().auth.accessToken;
 
     if (!token) {
-      void router.navigate(ROUTE_PATHS.LOGIN);
-      return Promise.reject(new ApiError("Unauthenticated — redirecting to login.", null, 401));
+      void router.navigate(ROUTE_PATHS.UNAUTHORIZED);
+      return Promise.reject(new ApiError("Unauthenticated — redirecting to unauthorized.", null, 401));
     }
 
     config.headers.Authorization = `Bearer ${token}`;
@@ -57,41 +69,41 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response): AxiosResponse | Promise<AxiosResponse> => {
+  // Replace response.data with the inner ApiResponse payload; http methods extract .data afterwards
+  (response): AxiosResponse => {
     const body = response.data as ApiResponse;
 
     if (body.code === ResultEnum.OVERDUE) {
       handleAuthExpired();
-      return Promise.reject(new ApiError(body.message || "Overdue", body, body.code));
+      return Promise.reject(new ApiError(body.message || "Overdue", body, body.code)) as never;
     }
 
-    if (body.success) return { ...response, data: body.data };
+    if (!body.success) {
+      return Promise.reject(new ApiError(body.message || "Request failed", body, body.code)) as never;
+    }
 
-    return Promise.reject(new ApiError(body.message || "Request failed", body, body.code));
+    return { ...response, data: body.data };
   },
   (error: AxiosError<ApiResponse>) => {
+    // check network error here
+    if (isNetworkError(error)) return Promise.reject(error);
+
     if (axios.isCancel(error)) return Promise.reject(error);
 
     if (error.response) {
       const { status, data } = error.response;
 
-      if (status === ResultEnum.OVERDUE) {
+      if (status === ResultEnum.OVERDUE && !isPublicEndpoint(error.config?.url ?? "")) {
         handleAuthExpired();
         return Promise.reject(new ApiError(data?.message ?? "Overdue", data, status));
       }
 
-      showErrorMessage(data?.message ?? `Server error (${status})`);
       return Promise.reject(new ApiError(data?.message ?? "Server error", data, status));
     }
 
     if (error.code === "ECONNABORTED") {
       showErrorMessage("Request timed out. Please try again.");
       return Promise.reject(new ApiError("Request timed out.", null, 408));
-    }
-
-    if (error.message === "Network Error") {
-      showErrorMessage("No network connection.");
-      return Promise.reject(new ApiError("No network connection.", null, 503));
     }
 
     showErrorMessage("An unexpected error occurred.");
@@ -101,18 +113,22 @@ axiosInstance.interceptors.response.use(
 );
 
 const http = {
-  get: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => axiosInstance.get<unknown, T>(url, config),
+  get: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => axiosInstance.get<T>(url, config).then((res) => res.data),
 
   post: <T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
-    axiosInstance.post<unknown, T>(url, data, config),
+    axiosInstance.post<T>(url, data, config).then((res) => res.data),
 
   put: <T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
-    axiosInstance.put<unknown, T>(url, data, config),
+    axiosInstance.put<T>(url, data, config).then((res) => res.data),
 
-  delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> => axiosInstance.delete<unknown, T>(url, config),
+  patch: <T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T> =>
+    axiosInstance.patch<T>(url, data, config).then((res) => res.data),
+
+  delete: <T>(url: string, config?: AxiosRequestConfig): Promise<T> =>
+    axiosInstance.delete<T>(url, config).then((res) => res.data),
 
   download: (url: string, config?: AxiosRequestConfig): Promise<Blob> =>
-    axiosInstance.get<unknown, Blob>(url, { ...config, responseType: "blob" }),
+    axiosInstance.get<Blob>(url, { ...config, responseType: "blob" }).then((res) => res.data),
 };
 
 export default http;

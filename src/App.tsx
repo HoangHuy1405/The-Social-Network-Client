@@ -1,29 +1,30 @@
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/react-query";
 import { Outlet } from "react-router-dom";
 import { store, persistor } from "@/store";
-import MessageProvider from "@/components/common/MessageProvider";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: 1,
-      refetchOnWindowFocus: false,
-    },
-  },
-});
+import MessageProvider from "@/contexts/MessageProvider";
+import { ThemeProvider } from "@/contexts/ThemeProvider";
+import { LoadingProvider } from "@/components/core/AppLoading";
+import { AuthGuard } from "@/router/AuthGuard";
 
 function App() {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <QueryClientProvider client={queryClient}>
-          <MessageProvider />
-          <Outlet />
-        </QueryClientProvider>
-      </PersistGate>
-    </Provider>
+    <ThemeProvider defaultTheme="system">
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <QueryClientProvider client={queryClient}>
+            <MessageProvider />
+            <LoadingProvider>
+              <AuthGuard>
+                <Outlet />
+              </AuthGuard>
+            </LoadingProvider>
+          </QueryClientProvider>
+        </PersistGate>
+      </Provider>
+    </ThemeProvider>
   );
 }
 

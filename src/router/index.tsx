@@ -1,24 +1,84 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import { ROUTE_PATHS } from "@/constants/routes";
 import App from "@/App";
 import NotFoundPage from "@/views/NotFoundPage";
+import { AuthLayout } from "@/features/auth/views/layout";
 import { LoginPage } from "@/features/auth/views/login";
-import ProtectedRoute from "./ProtectedRoute";
+import { RegisterPage } from "@/features/auth/views/register";
+import { FeedPage } from "@/features/feed/views/FeedPage";
+import { MainLayout } from "@/views/MainLayout";
+import { ProfileLayout } from "@/views/ProfileLayout";
+import { ProfilePage } from "@/features/profile/views/ProfilePage";
+import { SettingsLayout } from "@/features/settings/views";
+import { AccountTab } from "@/features/settings/views/AccountTab";
+import { ProfileTab } from "@/features/settings/views/ProfileTab";
+import { PrivacyTab } from "@/features/settings/views/PrivacyTab";
+import { PreferencesTab } from "@/features/settings/views/PreferencesTab";
+import { NotificationsTab } from "@/features/settings/views/NotificationsTab";
+import UnauthorizedPage from "@/views/UnauthorizedPage";
+import CreatePostPage from "@/features/post/views/CreatePostPage";
 
 export const router = createBrowserRouter([
   {
     path: ROUTE_PATHS.HOME,
     element: <App />,
     children: [
-      // Public routes
+      // Public Auth routes
       {
-        path: ROUTE_PATHS.LOGIN,
-        element: <LoginPage />,
+        element: <AuthLayout />,
+        children: [
+          {
+            path: ROUTE_PATHS.LOGIN,
+            element: <LoginPage />,
+          },
+          {
+            path: ROUTE_PATHS.REGISTER,
+            element: <RegisterPage />,
+          },
+        ],
       },
-      // Protected routes
+      // Authenticated routes with MainLayout (header + sidebar)
       {
-        element: <ProtectedRoute />,
-        children: [],
+        element: <MainLayout />,
+        children: [
+          {
+            path: ROUTE_PATHS.HOME,
+            element: <FeedPage />,
+          },
+          {
+            path: ROUTE_PATHS.CREATE_POST,
+            element: <CreatePostPage />,
+            handle: { requiresAuth: true },
+          },
+          {
+            path: "/settings",
+            element: <SettingsLayout />,
+            handle: { requiresAuth: true },
+            children: [
+              { index: true, element: <Navigate to="account" replace /> },
+              { path: "account", element: <AccountTab /> },
+              { path: "profile", element: <ProfileTab /> },
+              { path: "privacy", element: <PrivacyTab /> },
+              { path: "preferences", element: <PreferencesTab /> },
+              { path: "notifications", element: <NotificationsTab /> },
+            ],
+          },
+        ],
+      },
+      // Profile page (header only, no sidebar)
+      {
+        element: <ProfileLayout />,
+        children: [
+          {
+            path: ROUTE_PATHS.PROFILE,
+            element: <ProfilePage />,
+          },
+        ],
+      },
+      // 401 Unauthorized
+      {
+        path: ROUTE_PATHS.UNAUTHORIZED,
+        element: <UnauthorizedPage />,
       },
       // 404
       {

@@ -11,3 +11,5 @@ export const registerApi = (data: RegisterRequest) =>
   http.post<RegisterResponse>(API_ENDPOINTS.auth.register, data, {
     headers: { isToken: false },
   });
+
+export const logoutApi = () => http.post(API_ENDPOINTS.auth.logout);
